@@ -1,15 +1,14 @@
 const mysql = require("mysql");
 const util = require("util");
 
-const path = require('path')
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 const conn = mysql.createConnection({
   host: "localhost",
   user: "pi",
   password: "28011994",
-  // database: "web_lib",
-  database: process.env.DB_NAME
+  database: process.env.DB_NAME,
 });
 const q = util.promisify(conn.query).bind(conn);
 
@@ -22,12 +21,40 @@ const getQuery = async function (qStr) {
   }
 };
 
-module.exports.getRows = async function (itemId, table) {
+module.exports.getRows = async function (itemId, table, colName = "ComicId") {
   try {
     const data = await getQuery(
-      `SELECT * FROM ${table} WHERE ComicId=${itemId}`
+      `SELECT * FROM ${table} WHERE ${colName}=${itemId}`
     );
     return data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+module.exports.getComicInfoAll = async function (itemId) {
+  try {
+    const comic = await getQuery(
+      `SELECT * FROM comics WHERE ComicId=${itemId}`
+    );
+    const chapters = await getQuery(
+      `SELECT * FROM comic_items WHERE ComicId=${itemId}`
+    );
+    const chpt_list = await Promise.all(
+      chapters.map(async (c) => {
+        const pages = await getQuery(
+          `SELECT * FROM pages WHERE ItemId=${c.ItemId}`
+        );
+        const pagePaths = pages.map((p) => p.Path);
+        return { ...c, PagePaths: pagePaths };
+      })
+    );
+
+    return {
+      identity: comic[0],
+      chapters: chpt_list,
+      total_chapters: chpt_list.length,
+    };
   } catch (err) {
     throw err;
   }
@@ -52,7 +79,6 @@ module.exports.getPage = async function (
   try {
     // Get Data Results of each Page
     const offset = nPerPage * (page - 1);
-    console.log(offset);
     const query = `
       SELECT *
       FROM ${table}
@@ -77,3 +103,21 @@ module.exports.getPage = async function (
     throw err;
   }
 };
+
+module.exports.search = async function(searchText){
+try {
+  const searchComic = await getQuery(`SELECT * FROM comics WHERE MATCH (Title,Author,Description) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+  const searchGenre = await getQuery(`
+  SELECT * 
+  FROM genres AS g 
+  INNER JOIN comics AS c
+  WHERE g.ComicId=c.ComicId
+  AND MATCH (g.Text)
+  AGAINST ('${searchText}' IN BOOLEAN MODE)
+  `)
+  const data = [...searchComic, ...searchGenre]
+  return data
+}catch (err) {
+  throw err;
+}
+}

@@ -4,6 +4,7 @@ const apiSettings = {
   fetchLibrary: async (page, type, sort) => {
     let column = "DateCreated";
     if (sort === "Most Chapters") column = "NumChapters";
+    
     const res = await axios({
       method: "GET",
       url: `${process.env.REACT_APP_DOMAIN}${type}/l?page=${page}&sort=${column}`,

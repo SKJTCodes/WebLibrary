@@ -20,7 +20,6 @@ export const useLibraryFetch = () => {
     try {
       setError(false);
       setLoading(true);
-      console.log(sort)
       const comics = await API.fetchLibrary(page, "c", sort);
 
       setState(comics);
@@ -98,7 +97,7 @@ export const useChapterFetch = (itemId, chaptId) => {
   const identity = useRef(itemId);
   const [state, setState] = useState({
     item: {},
-    curChapt: { page_paths: [] },
+    curChapt: { PagePaths: [] },
     nextChaptNum: 0,
     prevChaptNum: 0,
   });
@@ -109,20 +108,22 @@ export const useChapterFetch = (itemId, chaptId) => {
       setLoading(true);
 
       const entry = await API.fetchEntry(itemId, "c");
+
       const chapter = entry.chapters.filter(
-        (chpt) => chpt.chapter_no === parseInt(chapter_num)
+        (chpt) => chpt.ChapterNo === parseInt(chapter_num)
       )[0];
+
       const chaptIndex = entry.chapters
-        .map((c) => c.chapter_no)
-        .indexOf(chapter.chapter_no);
+        .map((c) => c.ChapterNo)
+        .indexOf(chapter.ChapterNo);
 
       const nchapt =
         chaptIndex < entry.chapters.length - 1
-          ? entry.chapters[chaptIndex + 1].chapter_no
+          ? entry.chapters[chaptIndex + 1].ChapterNo
           : -1;
 
       const pchapt =
-        chaptIndex > 0 ? entry.chapters[chaptIndex - 1].chapter_no : -1;
+        chaptIndex > 0 ? entry.chapters[chaptIndex - 1].ChapterNo : -1;
 
       setState({
         item: entry,
@@ -142,6 +143,8 @@ export const useChapterFetch = (itemId, chaptId) => {
     console.log("Initial");
     getChapter(identity.current, chptId);
   }, [chptId]);
+
+  
 
   return { state, error, loading, setChptId };
 };

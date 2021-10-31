@@ -28,11 +28,11 @@ const ComicReader = () => {
       : [
           { title: "Home", url: "/" },
           {
-            title: Helper.titleCase(chapter.item["identity"].title),
+            title: Helper.titleCase(chapter.item["identity"].Title),
             url: `/c/${comicId}`,
           },
           {
-            title: `Chapter ${chapter.curChapt["chapter_no"]}`,
+            title: `Chapter ${chapter.curChapt["ChapterNo"]}`,
             url: undefined,
           },
         ];
@@ -46,7 +46,7 @@ const ComicReader = () => {
           callback={() => setChptId(chapter.prevChaptNum)}
         />
       )}
-      <List pages={chapter.curChapt["page_paths"]} />
+      <List pages={chapter.curChapt["PagePaths"]} />
       {chapter.nextChaptNum !== -1 && (
         <Button
           text={"Next"}

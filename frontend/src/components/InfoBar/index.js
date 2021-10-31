@@ -16,20 +16,20 @@ const Cover = ({ image_path }) => (
 
 const InfoBar = ({ item }) => {
   return (
-    <Wrapper backdrop={item.cover_path}>
+    <Wrapper backdrop={item.CoverPath}>
       <div className="transparent">
         <Content>
-          <Cover image_path={item.cover_path} />
+          <Cover image_path={item.CoverPath} />
           <Text>
-            <h1>{Helper.titleCase(item.title)}</h1>
+            <h1>{Helper.titleCase(item.Title)}</h1>
             <h3>DESCRIPTION</h3>
-            <p>{item.description}</p>
+            <p>{item.Description}</p>
             <h3>AUTHOR</h3>
-            <Link to={`/cs/${item.author}`}>
-              <span className="author">{Helper.titleCase(item.author)}</span>
+            <Link to={`/cs/${item.Author}`}>
+              <span className="author">{Helper.titleCase(item.Author)}</span>
             </Link>
             <h3>GENRE</h3>
-            {item.genre.map((genre) => (
+            {item.Genre.map((genre) => (
               <Link key={genre} to={`/cs/${genre}`}>
                 <Pill>{`${genre}`}</Pill>
               </Link>

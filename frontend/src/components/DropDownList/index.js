@@ -46,7 +46,7 @@ const DropDownList = ({ header = "", list = [], setSort }) => {
 
     setTitle(title);
     setIsOpen(!isOpen);
-    setSelItem(title === "Most Recent" ? "recency" : "chapter");
+    setSelItem(title);
 
     setItems((state) => {
       state.forEach((ele) => (ele.selected = false));

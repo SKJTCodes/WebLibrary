@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { getRows, getGenre, getPage } = require("../services/mysql");
+const {
+  search,
+  getGenre,
+  getPage,
+  getComicInfoAll,
+} = require("../services/mysql");
 const { deleteFolder } = require("../services/filesystem");
 const path = require("path");
 
@@ -51,13 +56,11 @@ router.get("/l", function (req, res) {
 /* Get Entry Info, including Chapter info from sub table */
 router.get("/entry", function (req, res) {
   const { itemId } = req.query;
-
-  getEntry(parseInt(itemId), "COMICS", "COMIC_ITEMS")
+  getComicInfoAll(itemId)
     .then((data) => {
-      res.json({
-        identity: data[0],
-        chapters: data[1],
-        total_chapters: data[1].length,
+      getGenre(itemId).then((genres) => {
+        data["identity"] = { ...data["identity"], Genre: genres };
+        res.json(data);
       });
     })
     .catch((err) => {
@@ -67,18 +70,28 @@ router.get("/entry", function (req, res) {
 });
 
 // Get Search Results
-router.get("/search", function (req, res) {
-  const { text } = req.query;
+// router.get("/search", function (req, res) {
+//   const { text } = req.query;
 
-  searchEntry(text, "COMICS")
-    .then((data) => {
-      res.json(data);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(404).send(err);
-    });
-});
+//   searchEntry(text, "COMICS")
+//     .then((data) => {
+//       res.json(data);
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//       res.status(404).send(err);
+//     });
+// });
+router.get("/search", function(req, res) {
+  const {text} = req.query;
+  
+  search(text).then(data => {
+    res.json(data)
+  }).catch(err => {
+    console.error(err)
+    res.status(404).send(err)
+  })
+})
 
 const delCm = async (itemId) => {
   const data = await deleteAll(itemId, "COMICS", "COMIC_ITEMS");

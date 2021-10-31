@@ -57,10 +57,10 @@ const ComicPage = () => {
         <Grid header={"Chapters"}>
           {state["chapters"].map((chpt) => (
             <Thumb
-              key={chpt.chapter_no}
-              image={`${process.env.REACT_APP_DOMAIN}${chpt.page_paths[0]}`}
-              itemId={`${chpt.id}/${chpt.chapter_no}`}
-              title={`Chapter ${chpt.chapter_no}`}
+              key={chpt.ChapterNo}
+              image={`${process.env.REACT_APP_DOMAIN}${chpt.PagePaths[0]}`}
+              itemId={`${chpt.ComicId}/${chpt.ChapterNo}`}
+              title={`Chapter ${chpt.ChapterNo}`}
               type="cc"
               clickable
               disable
