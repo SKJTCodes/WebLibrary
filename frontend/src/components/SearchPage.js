@@ -31,11 +31,11 @@ const SearchPage = () => {
       <Grid>
         {comics.map((comic) => (
           <Thumb
-            key={comic.id}
-            itemId={comic.id}
+            key={comic.ComicId}
+            itemId={comic.ComicId}
             type="c"
-            image={`${process.env.REACT_APP_DOMAIN}${comic.cover_path}`}
-            title={Helper.titleCase(comic.title)}
+            image={`${process.env.REACT_APP_DOMAIN}${comic.CoverPath}`}
+            title={Helper.titleCase(comic.Title)}
             clickable
           />
         ))}
