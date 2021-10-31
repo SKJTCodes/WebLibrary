@@ -1,0 +1,3 @@
+UPDATES: video player
+UPDATES: upload comic
+UPDATES: Delete Chapter, Edit Chapter info

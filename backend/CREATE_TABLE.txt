@@ -1,0 +1,36 @@
+create table comics(
+ComicId int not null,
+Title varchar(255) not null,
+Author varchar(255) not null,
+Description MEDIUMTEXT default 'INSERT DESCRIPTION HERE ...',
+DateCreated DATETIME not null,
+CoverPath varchar(255) not null,
+NumChapters int,
+primary key (ComicId)
+);
+
+create table genres(
+GenreId int not null,
+Text varchar(255) not null,
+ComicId int not null,
+primary key (GenreId),
+foreign key (ComicId) references comics(ComicId)
+);
+
+create table comic_items(
+ComicId int not null,
+ItemId int not null,
+ChapterNo double not null,
+TotalPages int not null,
+DateCreated DATETIME not null,
+primary key (ItemId),
+foreign key (ComicId) references comics(ComicId)
+);
+
+create table pages(
+PageId int not null,
+Path varchar(255) not null,
+ItemId int not null,
+primary key (PageId),
+foreign key (ItemId) references comic_items(ItemId)
+);
