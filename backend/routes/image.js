@@ -1,12 +1,5 @@
 const express = require("express");
 const router = express.Router();
-// const {
-//   getPage,
-//   getEntry,
-//   searchEntry,
-//   deleteAll,
-//   updateEntry,
-// } = require("../services/mongodb");
 const { getRows, getGenre, getPage } = require("../services/mysql");
 const { deleteFolder } = require("../services/filesystem");
 const path = require("path");
@@ -32,9 +25,6 @@ router.post("/upd", (req, res) => {
     i++;
   }
 
-  // const currentDate = new Date();
-  // data["date_updated"] = new Date(currentDate.toISOString());
-
   updateEntry("COMICS", id, data)
     .then((data) => {
       console.log(data);
@@ -47,21 +37,6 @@ router.post("/upd", (req, res) => {
 });
 
 /* GET Library data, Page by Page */
-// router.get("/l", function (req, res) {
-//   let { page, num, sort } = req.query;
-//   if (!num) {
-//     num = 20;
-//   }
-
-//   getPage(page, "COMICS", "COMIC_ITEMS", parseInt(num), sort)
-//     .then((data) => {
-//       res.json({ ...data, page: parseInt(page) });
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//       res.status(404).send(err);
-//     });
-// });
 router.get("/l", function (req, res) {
   let { page, num, sort } = req.query;
   if (!num) {

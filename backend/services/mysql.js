@@ -1,12 +1,15 @@
 const mysql = require("mysql");
 const util = require("util");
 
+const path = require('path')
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+
 const conn = mysql.createConnection({
   host: "localhost",
   user: "pi",
   password: "28011994",
-  database: "web_lib",
-  // database: process.env.DB_NAME
+  // database: "web_lib",
+  database: process.env.DB_NAME
 });
 const q = util.promisify(conn.query).bind(conn);
 
