@@ -70,18 +70,6 @@ router.get("/entry", function (req, res) {
 });
 
 // Get Search Results
-// router.get("/search", function (req, res) {
-//   const { text } = req.query;
-
-//   searchEntry(text, "COMICS")
-//     .then((data) => {
-//       res.json(data);
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//       res.status(404).send(err);
-//     });
-// });
 router.get("/search", function(req, res) {
   const {text} = req.query;
   

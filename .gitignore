@@ -12,6 +12,10 @@
 # ignore public data
 /backend/public/comic
 
+# don't ignore database scripts
+!/backend/CREATE_TABLE.txt
+!/backend/INSERT_DEVEL_*.txt
+
 # testing
 /frontend/coverage
 
