@@ -1,0 +1,9 @@
+CHANGELOG
+
+Lib v1.00, 20211101
+  rev: da13a1df817cc7def9f00a13809fc3088ce07f92
+  - Have capability to switch between devel and prod db
+  - Able to load LandingPage
+  - Able to load Comic Info Page
+  - Able to access Reader
+  - able to perform Search
