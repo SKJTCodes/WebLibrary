@@ -1,3 +1,5 @@
-UPDATES: video player
-UPDATES: upload comic
-UPDATES: Delete Chapter, Edit Chapter info
+- video player
+- upload comic
+- Delete Chapter, Edit Chapter info
+- EDIT DB INFO
+- page navigation (back will bring to the previous page rather than load the previous url)
