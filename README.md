@@ -1,3 +1,19 @@
+# WebLibrary
+A Centralize Web app that allows us to browse our comic collection and video collection
+
+## Initialize
+1. run 'npm install' in both frontend and backend folder.
+2. create a mysql server and edit backend/.env file accordingly
+3. There are template comics for us to use. but we need to create a database for them first, data is in backend CREATE_TABLE.txt. Use this info to create the tables required.
+4. use INSERT_DEVEL_*.txt to insert the values for each table.
+5. edit frontend/.env with your local machine IP address
+
+## Start-up
+1. in frontend, run 'npm start'
+2. in backend, run 'npm start'
+3. access the website by typing localhost:3221 to access the front end. The front end will communicate with the backend, therefore we only need to access the frontend.
+
+Below Shows React basic Readme
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
