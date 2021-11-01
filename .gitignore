@@ -15,6 +15,7 @@
 # don't ignore database scripts
 !/backend/CREATE_TABLE.txt
 !/backend/INSERT_DEVEL_*.txt
+/backend/INSERT*.txt
 
 # testing
 /frontend/coverage
