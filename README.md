@@ -8,6 +8,16 @@ A Centralize Web app that allows us to browse our comic collection and video col
 4. use INSERT_DEVEL_*.txt to insert the values for each table.
 5. edit frontend/.env with your local machine IP address
 
+## .env examples.
+1. Create frontend/.env file
+```javascript
+DB_NAME=test
+DB_HOST=localhost
+DB_USER=mysql_username
+DB_PWD=password!@#
+PORT=3222
+```
+
 ## Start-up
 1. in frontend, run 'npm start'
 2. in backend, run 'npm start'
