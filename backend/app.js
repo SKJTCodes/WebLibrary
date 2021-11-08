@@ -4,6 +4,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
+const serveIndex = require("serve-index");
 
 var indexRouter = require("./routes/index");
 var imageRouter = require("./routes/image");
@@ -28,6 +29,11 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", uploadRouter);
 app.use("/c", imageRouter);
 app.use("/v", videoRouter);
+app.use(
+  "/public",
+  express.static("public"),
+  serveIndex("public", { icons: true })
+);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
