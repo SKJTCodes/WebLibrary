@@ -20,28 +20,35 @@ module.exports.getRows = async function (itemId, table, colName = "ComicId") {
   }
 };
 
-module.exports.getComicInfoAll = async function (itemId) {
+module.exports.getComicInfoAll = async function (itemId, table) {
   try {
-    const comic = await getQuery(
-      `SELECT * FROM comics WHERE ComicId=${itemId}`
-    );
-    const chapters = await getQuery(
-      `SELECT * FROM comic_items WHERE ComicId=${itemId}`
-    );
-    const chpt_list = await Promise.all(
-      chapters.map(async (c) => {
-        const pages = await getQuery(
-          `SELECT * FROM pages WHERE ItemId=${c.ItemId}`
-        );
-        const pagePaths = pages.map((p) => p.Path);
-        return { ...c, PagePaths: pagePaths };
-      })
+    const item = await getQuery(
+      `SELECT * FROM Library_Items WHERE ItemId=${itemId}`
     );
 
+    const ep_chpt = await getQuery(
+      `SELECT * FROM ${table} WHERE ItemId=${itemId}`
+    );
+
+    let data_list = null;
+    if (table === "Chapters") {
+      data_list = await Promise.all(
+        ep_chpt.map(async (c) => {
+          const pages = await getQuery(
+            `SELECT * FROM Pages WHERE ChptId=${c.ChptId}`
+          );
+          const pagePaths = pages.map((p) => p.Path);
+          return { ...c, PagePaths: pagePaths };
+        })
+      );
+    } else if (table === "Episodes") {
+      data_list = ep_chpt;
+    }
+
     return {
-      identity: comic[0],
-      chapters: chpt_list,
-      total_chapters: chpt_list.length,
+      identity: item[0],
+      [table.toLowerCase()]: data_list,
+      [`total_${table.toLowerCase()}`]: data_list.length,
     };
   } catch (err) {
     throw err;
@@ -50,7 +57,7 @@ module.exports.getComicInfoAll = async function (itemId) {
 
 module.exports.getGenre = async function (itemId) {
   try {
-    const data = await getQuery(`SELECT * FROM genres WHERE ComicId=${itemId}`);
+    const data = await getQuery(`SELECT * FROM Genres WHERE ItemId=${itemId}`);
     const arrayData = data.map((o) => o.Text);
     return arrayData;
   } catch (err) {
@@ -61,6 +68,7 @@ module.exports.getGenre = async function (itemId) {
 module.exports.getPage = async function (
   page,
   table,
+  type,
   sort = "DateCreated",
   nPerPage = 20
 ) {
@@ -70,14 +78,17 @@ module.exports.getPage = async function (
     const query = `
       SELECT *
       FROM ${table}
+      WHERE ItemType='${type}'
       ORDER BY ${sort} DESC
       LIMIT ${offset},${nPerPage}
       `;
     const pageData = await getQuery(query);
 
     // Get total number of rows
-    const total = await getQuery(`SELECT COUNT(ComicId) FROM ${table}`);
-    const totalRows = total[0]["COUNT(ComicId)"];
+    const total = await getQuery(
+      `SELECT COUNT(ItemId) FROM ${table} WHERE ItemType='${type}'`
+    );
+    const totalRows = total[0]["COUNT(ItemId)"];
 
     // total number of pages
     const totalPages = Math.ceil(totalRows / nPerPage);

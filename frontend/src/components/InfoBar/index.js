@@ -25,8 +25,8 @@ const InfoBar = ({ item }) => {
             <h3>DESCRIPTION</h3>
             <p>{item.Description}</p>
             <h3>AUTHOR</h3>
-            <Link to={`/cs/${item.Author}`}>
-              <span className="author">{Helper.titleCase(item.Author)}</span>
+            <Link to={`/cs/${item.Maker}`}>
+              <span className="author">{Helper.titleCase(item.Maker)}</span>
             </Link>
             <h3>GENRE</h3>
             {item.Genre.map((genre) => (

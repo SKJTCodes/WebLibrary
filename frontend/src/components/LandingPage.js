@@ -48,8 +48,8 @@ const LandingPage = () => {
         {state.results.map((item) => {
           return (
             <Thumb
-              key={item.ComicId}
-              itemId={item.ComicId}
+              key={item.ItemId}
+              itemId={item.ItemId}
               type="c"
               image={`${process.env.REACT_APP_DOMAIN}${item.CoverPath}`}
               title={Helper.titleCase(item.Title)}
