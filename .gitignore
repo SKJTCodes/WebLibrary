@@ -13,8 +13,7 @@
 /backend/.env
 
 # ignore public data
-/backend/public/comic
-/backend/public/video
+/backend/public
 
 # don't ignore database scripts
 !/backend/CREATE_TABLE.txt

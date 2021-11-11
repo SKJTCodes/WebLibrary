@@ -1,0 +1,3 @@
+CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+# GRANT ACCESS TO ALL TABLES
+GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';

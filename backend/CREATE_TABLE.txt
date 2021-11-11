@@ -1,42 +1,56 @@
+''# Create database according to backend/.env file
 CREATE DATABASE web_lib;
+use web_lib;
 
-use web_lib
-
-create table comics(
-ComicId int not null,
-Title varchar(255) not null,
-Author varchar(255) not null,
-Description MEDIUMTEXT default 'INSERT DESCRIPTION HERE ...',
-DateCreated DATETIME not null,
-CoverPath varchar(255) not null,
-NumChapters int,
-primary key (ComicId),
-fulltext (Title, Author, Description)
+# Create Common Video/Image Tables
+CREATE TABLE Library_Items(
+ItemId INT NOT NULL,
+Title VARCHAR(255) NOT NULL,
+Maker VARCHAR(255) DEFAULT 'Unidentified',
+ItemType ENUM('vid', 'img') NOT NULL,
+Description MEDIUMTEXT DEFAULT 'INSERT DESCRIPTION HERE ...',
+DateCreated DATETIME NOT NULL,
+CoverPath VARCHAR(255) DEFAULT 'default_cover.jpg',
+TotalEntries INT NOT NULL,
+PRIMARY KEY (ItemId),
+FULLTEXT (Title, Maker, Description)
 );
 
-create table genres(
-GenreId int not null,
-Text varchar(255) not null,
-ComicId int not null,
-primary key (GenreId),
-foreign key (ComicId) references comics(ComicId),
-fulltext (Text)
+# Table to list genres of Library Items, One Library Item to multiple Genres
+CREATE TABLE Genres(
+GenreId INT NOT NULL,
+Text VARCHAR(255) NOT NULL,
+ItemId INT,
+PRIMARY KEY (GenreId),
+FOREIGN KEY (ItemId) REFERENCES Library_Items(ItemId),
+FULLTEXT (Text)
 );
 
-create table comic_items(
-ComicId int not null,
-ItemId int not null,
-ChapterNo double not null,
-TotalPages int not null,
-DateCreated DATETIME not null,
-primary key (ItemId),
-foreign key (ComicId) references comics(ComicId)
+# Episode/Chapters of Library Items, One Library Item to Multiple episode/chapter
+CREATE TABLE Chapters(
+ChptId INT NOT NULL,
+ChapterNo DOUBLE NOT NULL,
+TotalPages INT NOT NULL,
+DateCreated DaTETIME NOT NULL,
+ItemId INT,
+PRIMARY KEY (ChptId),
+FOREIGN KEY (ItemId) REFERENCES Library_Items(ItemId)
+);
+CREATE TABLE Episodes(
+EpId INT NOT NULL,
+EpisodeNo DOUBLE NOT NULL,
+Path VARCHAR(255) NOT NULL,
+DateCreated DATETIME NOT NULL,
+ItemId INT,
+PRIMARY KEY (EpId),
+FOREIGN KEY (ItemId) REFERENCES Library_Items(ItemId)
 );
 
-create table pages(
-PageId int not null,
-Path varchar(255) not null,
-ItemId int not null,
-primary key (PageId),
-foreign key (ItemId) references comic_items(ItemId)
+# List of Page Paths for each Chapter, a single Chapter has Multiple Pages
+CREATE TABLE Pages(
+PageId INT NOT NULL,
+Path VARCHAR(255) NOT NULL,
+ChptId INT,
+PRIMARY KEY (PageId),
+FOREIGN KEY (ChptId) REFERENCES Chapters(ChptId)
 );
