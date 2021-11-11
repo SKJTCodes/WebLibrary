@@ -1,6 +1,6 @@
 ''# Create database according to backend/.env file
 CREATE DATABASE web_lib;
-use web_lib;
+use web_lib
 
 # Create Common Video/Image Tables
 CREATE TABLE Library_Items(
