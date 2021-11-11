@@ -48,7 +48,7 @@ router.get("/l", function (req, res) {
     num = 20;
   }
 
-  getPage(parseInt(page), "comics", sort, parseInt(num)).then((data) => {
+  getPage(parseInt(page), "Library_Items", 'img', sort, parseInt(num)).then((data) => {
     res.json({ ...data, page: parseInt(page) });
   });
 });
@@ -56,7 +56,7 @@ router.get("/l", function (req, res) {
 /* Get Entry Info, including Chapter info from sub table */
 router.get("/entry", function (req, res) {
   const { itemId } = req.query;
-  getComicInfoAll(itemId)
+  getComicInfoAll(itemId, 'Chapters')
     .then((data) => {
       getGenre(itemId).then((genres) => {
         data["identity"] = { ...data["identity"], Genre: genres };

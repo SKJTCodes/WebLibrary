@@ -1,4 +1,4 @@
-insert into genres(GenreId, Text, ComicId)
+insert into Genres(GenreId, Text, ItemId)
 values
 (1,'drama',1),
 (2,'sci-fi',1),

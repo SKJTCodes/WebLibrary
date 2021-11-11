@@ -1,5 +1,10 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# don't ignore database scripts
+/backend/INSERT*.txt
+!/backend/CREATE_TABLE.txt
+!/backend/INSERT_DEVEL_*.txt
+
 # dependencies
 /frontend/node_modules
 /backend/node_modules
@@ -14,11 +19,6 @@
 
 # ignore public data
 /backend/public
-
-# don't ignore database scripts
-!/backend/CREATE_TABLE.txt
-!/backend/INSERT_DEVEL_*.txt
-/backend/INSERT*.txt
 
 # testing
 /frontend/coverage

@@ -30,9 +30,9 @@ const ComicPage = () => {
       <>
         {openModal.delete && (
           <DeleteComicModal
-            title={state["identity"].title}
+            title={state["identity"].Title}
             toggleModal={toggleModal}
-            id={state["identity"].id}
+            id={state["identity"].ItemId}
           />
         )}
         {openModal.edit && (
@@ -59,7 +59,7 @@ const ComicPage = () => {
             <Thumb
               key={chpt.ChapterNo}
               image={`${process.env.REACT_APP_DOMAIN}${chpt.PagePaths[0]}`}
-              itemId={`${chpt.ComicId}/${chpt.ChapterNo}`}
+              itemId={`${chpt.ItemId}/${chpt.ChapterNo}`}
               title={`Chapter ${chpt.ChapterNo}`}
               type="cc"
               clickable
