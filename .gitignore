@@ -18,7 +18,8 @@
 /backend/.env
 
 # ignore public data
-/backend/public
+/backend/public/*
+!/backend/public/images
 
 # testing
 /frontend/coverage
