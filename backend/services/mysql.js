@@ -103,6 +103,72 @@ module.exports.getPage = async function (
   }
 };
 
+const getPageQuery = function (itemId, chptNum) {
+  return `
+  SELECT Pages.Path
+  FROM Chapters INNER JOIN Pages
+  ON Pages.ChptId=Chapters.ChptId
+  WHERE Chapters.ItemId=${itemId}
+  AND Chapters.ChapterNo=${chptNum}
+`;
+};
+
+// Get Current/Prev/Next Chapter Pages
+module.exports.getCurAdjChptPages = async function (itemId, chptNum) {
+  try {
+    const cur_data = await getQuery(getPageQuery(itemId, chptNum));
+
+    const item_info = await getQuery(
+      `SELECT * FROM Library_Items WHERE ItemId=${itemId}`
+    );
+
+    let page_paths = cur_data.map((p) => p.Path);
+    // Sort Paths according to page number
+    page_paths = page_paths.sort(
+      (a, b) =>
+        parseInt(
+          a.split("/")[a.split("/").length - 1].replace(/[.][a-z]{1,3}/i, "")
+        ) -
+        parseInt(
+          b.split("/")[b.split("/").length - 1].replace(/[.][a-z]{1,3}/i, "")
+        )
+    );
+
+    // Add Chapter Number to item info
+    const item = item_info[0];
+    item["ChapterNum"] = parseInt(chptNum);
+
+    const entry = {
+      item: item,
+      curChapt: page_paths,
+    };
+    // Get List of Chapters
+    const chpt_list = await getQuery(
+      `SELECT * FROM Chapters WHERE ItemId=${itemId} ORDER BY ChapterNo`
+    );
+
+    if (chpt_list.length === 1) {
+      entry["NextChaptNum"] = -1;
+      entry["PrevChaptNum"] = -1;
+    } else {
+      const cur_index = chpt_list.findIndex(
+        (x) => x.ChapterNo === parseInt(chptNum)
+      );
+      entry["PrevChaptNum"] =
+        cur_index === 0 ? -1 : chpt_list[cur_index - 1].ChapterNo;
+      entry["NextChaptNum"] =
+        cur_index === chpt_list.length - 1
+          ? -1
+          : chpt_list[cur_index + 1].ChapterNo;
+    }
+
+    return entry;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// Search Table
 module.exports.search = async function (searchText) {
   try {
     const searchComic = await getQuery(

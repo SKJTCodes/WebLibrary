@@ -3,6 +3,8 @@ import React from "react";
 import { Wrapper, Content, Image } from "./List.styles";
 
 const List = ({ header, pages }) => {
+  if (pages.length === 0) return null;
+
   return (
     <Wrapper>
       <h1>{header}</h1>

@@ -5,6 +5,7 @@ const {
   getGenre,
   getPage,
   getComicInfoAll,
+  getCurAdjChptPages
 } = require("../services/mysql");
 const { deleteFolder } = require("../services/filesystem");
 const path = require("path");
@@ -105,6 +106,18 @@ router.delete("/entry", function (req, res) {
       res.status(404).send(err);
     });
 });
+
+// Get Current/Next/Prev Chapter Page Paths
+router.get("/page", function(req, res) {
+  const {itemId, chptNum} = req.query;
+
+  getCurAdjChptPages(itemId, chptNum).then((data) => {
+    res.json(data);
+  }).catch((err) => {
+    console.error(err);
+    res.status(404).send(err);
+  })
+})
 
 // Testing
 router.get("/test", function (req, res) {

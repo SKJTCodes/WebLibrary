@@ -6,7 +6,6 @@ var logger = require("morgan");
 const cors = require("cors");
 const serveIndex = require("serve-index");
 
-var indexRouter = require("./routes/index");
 var imageRouter = require("./routes/image");
 var videoRouter = require("./routes/video");
 const uploadRouter = require("./routes/upload");

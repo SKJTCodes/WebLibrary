@@ -3,11 +3,19 @@ import axios from "axios";
 const apiSettings = {
   fetchLibrary: async (page, type, sort) => {
     let column = "DateCreated";
-    if (sort === "Most Chapters") column = "NumChapters";
-    
+    if ((sort === "Most Chapters") | (sort === "Most Episodes"))
+      column = "TotalEntries";
+
     const res = await axios({
       method: "GET",
       url: `${process.env.REACT_APP_DOMAIN}${type}/l?page=${page}&sort=${column}`,
+    });
+    return res.data;
+  },
+  fetchPages: async (itemId, chptNum, type) => {
+    const res = await axios({
+      method: "GET",
+      url: `${process.env.REACT_APP_DOMAIN}${type}/page?itemId=${itemId}&chptNum=${chptNum}`,
     });
     return res.data;
   },

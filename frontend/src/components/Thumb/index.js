@@ -8,14 +8,14 @@ const Thumb = ({ image, itemId, clickable, title, type, disable }) => (
     {clickable ? (
       <Link to={`/${type}/${itemId}`}>
         <div className="top">
-          <Image src={image} alt="item-thumb" />
+          {image && <Image src={image} alt="item-thumb" />}
         </div>
         <div className="bottom">{title}</div>
       </Link>
     ) : (
       <>
         <div className="top">
-          <Image src={image} alt="item-thumb" />
+          {image && <Image src={image} alt="item-thumb" />}
         </div>
         <div className="bottom">{title}</div>
       </>
