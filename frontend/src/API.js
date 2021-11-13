@@ -19,6 +19,13 @@ const apiSettings = {
     });
     return res.data;
   },
+  fetchEpisodes: async (itemId, epNum, type) => {
+    const res = await axios({
+      method: "GET",
+      url: `${process.env.REACT_APP_DOMAIN}${type}/ep?itemId=${itemId}&epNum=${epNum}`,
+    });
+    return res.data;
+  },
   fetchEntry: async (itemId, type) => {
     const res = await axios({
       method: "GET",

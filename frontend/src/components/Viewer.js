@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import ReactPlayer from "react-player";
 // Components
 import List from "./List";
 import Button from "./Button";
@@ -7,10 +8,56 @@ import Spinner from "./Spinner";
 import Breadcrumb from "./Breadcrumb";
 // Hooks
 import { useFetchPages } from "../hooks/useComicFetch";
+import { useFetchEpisode } from "../hooks/useVideoFetch";
 // Helper
 import Helper from "../Helper";
 
-const Episode = () => <div>Episode</div>;
+const Episode = ({ itemId, epNum, nav }) => {
+  const { state, loading, error } = useFetchEpisode(itemId, epNum);
+
+  if (error) return <div>Encountered an Error ...</div>;
+  if (loading) return <Spinner />;
+
+  const breadcrumb =
+    Object.keys(state["item"]).length === 0
+      ? []
+      : [
+          { title: "Home", url: "/v" },
+          {
+            title: Helper.titleCase(state.item.Title),
+            url: `/c/${itemId}`,
+          },
+          {
+            title: `Episode ${state.curEp.EpisodeNo}`,
+            url: undefined,
+          },
+        ];
+  return (
+    <>
+      <Breadcrumb listOfCrumbs={breadcrumb} />
+
+      {state.PrevEpNum !== -1 && (
+        <Button
+          text={"Previous"}
+          callback={() => nav(`/v/${itemId}/${state.PrevEpNum}`)}
+        />
+      )}
+
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <ReactPlayer
+          controls={true}
+          url={`${process.env.REACT_APP_DOMAIN}${state.curEp.Path}`}
+        />
+      </div>
+      {state.NextEpNum !== -1 && (
+        <Button
+          text={"Next"}
+          callback={() => nav(`/v/${itemId}/${state.NextEpNum}`)}
+        />
+      )}
+    </>
+  );
+};
 
 const Pages = ({ itemId, chptNum, nav }) => {
   const { state, error, loading } = useFetchPages(itemId, chptNum);
@@ -77,7 +124,7 @@ const Viewer = () => {
   return itemType === "c" ? (
     <Pages itemId={itemId} chptNum={num} nav={navigate} />
   ) : (
-    <Episode />
+    <Episode itemId={itemId} epNum={num} nav={navigate} />
   );
 };
 

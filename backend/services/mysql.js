@@ -20,7 +20,8 @@ module.exports.getRows = async function (itemId, table, colName = "ComicId") {
   }
 };
 
-module.exports.getComicInfoAll = async function (itemId, table) {
+// GET Library Item and Chapter/Episode List
+module.exports.getInfoAll = async function (itemId, table) {
   try {
     const item = await getQuery(
       `SELECT * FROM Library_Items WHERE ItemId=${itemId}`
@@ -98,6 +99,48 @@ module.exports.getPage = async function (
       total_results: totalRows,
       total_pages: totalPages,
     };
+  } catch (err) {
+    throw err;
+  }
+};
+
+module.exports.getCurAdjEpisodes = async function (itemId, epNum) {
+  try {
+    const ep_list = await getQuery(
+      `SELECT * FROM Episodes WHERE ItemId=${itemId} ORDER BY EpisodeNo`
+    );
+
+    const item = await getQuery(
+      `SELECT * FROM Library_Items WHERE ItemId=${itemId}`
+    );
+
+    const curIndex = ep_list.findIndex((x) => x.EpisodeNo === parseInt(epNum));
+
+    if (curIndex === -1) return {
+      item: item[0],
+      curEp: {},
+      PrevEpNum: -1,
+      NextEpNum: -1
+    }
+
+    const cur_ep = ep_list[curIndex];
+
+    const entry = {
+      item: item[0],
+      curEp: cur_ep,
+    };
+
+    if (ep_list.length === 1) {
+      entry["NextEpNum"] = -1;
+      entry["PrevEpNum"] = -1;
+    } else {
+      entry["PrevEpNum"] =
+        curIndex === 0 ? -1 : ep_list[curIndex - 1].EpisodeNo;
+      entry["NextEpNum"] =
+        curIndex === ep_list.length - 1 ? -1 : ep_list[curIndex + 1].EpisodeNo;
+    }
+
+    return entry;
   } catch (err) {
     throw err;
   }

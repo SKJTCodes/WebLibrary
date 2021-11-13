@@ -4,7 +4,7 @@ const {
   search,
   getGenre,
   getPage,
-  getComicInfoAll,
+  getInfoAll,
   getCurAdjChptPages
 } = require("../services/mysql");
 const { deleteFolder } = require("../services/filesystem");
@@ -57,7 +57,7 @@ router.get("/l", function (req, res) {
 /* Get Entry Info, including Chapter info from sub table */
 router.get("/entry", function (req, res) {
   const { itemId } = req.query;
-  getComicInfoAll(itemId, 'Chapters')
+  getInfoAll(itemId, 'Chapters')
     .then((data) => {
       getGenre(itemId).then((genres) => {
         data["identity"] = { ...data["identity"], Genre: genres };
