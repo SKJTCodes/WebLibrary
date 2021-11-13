@@ -16,7 +16,7 @@ export const EditComicModal = ({ toggleModal, item, update, setItem }) => {
   useEffect(() => {
     if (Object.keys(item).length !== 0) {
       setComic(item);
-      setGenre(item.genre);
+      setGenre(item.Genre);
     }
   }, [item]);
 

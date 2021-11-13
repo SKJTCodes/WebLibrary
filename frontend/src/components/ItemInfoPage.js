@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 // Hooks
 import { useFetchEntry } from "../hooks/useLibraryFetch";
-import { useUpdateComic } from "../hooks/useComicFetch";
 // Components
-import { DeleteComicModal, EditComicModal } from "./ComicModal";
 import FloatingButton from "./FloatingButton";
+import ModalUpdate from "./ModalUpdate";
 import Spinner from "./Spinner";
 import InfoBar from "./InfoBar";
-import Grid from "./Grid";
 import Thumb from "./Thumb";
+import Grid from "./Grid";
 // Helper
 import Helper from "../Helper";
 
@@ -17,40 +16,18 @@ const ItemInfoPage = () => {
   // URL Param
   const { itemType, itemId } = useParams();
   // Get Chapter/ Item Info from Server
-  const { state, loading, error, setState } = useFetchEntry(itemId, itemType);
-  // To update Database
-  const { setData, loading: loading2, error: error2 } = useUpdateComic();
-  // States
-  const defState = { edit: false, delete: false };
-  const [openModal, setOpenModal] = useState(defState);
+  const { state, loading, error } = useFetchEntry(itemId, itemType);
+  const [updateIsOpen, setUpdateIsOpen] = useState(false);
 
   const tableType = itemType === "c" ? "chapter" : "episode";
 
-  if (error | error2) return <div>Encountered an Error ...</div>;
-  if (loading | loading2) return <Spinner />;
-
-  const toggleModal = (type) => {
-    setOpenModal((state) => ({ ...defState, [type]: !state[type] }));
-  };
+  if (error) return <div>Encountered an Error ...</div>;
+  if (loading) return <Spinner />;
 
   if (Object.keys(state).length > 0)
     return (
       <>
-        {openModal.delete && (
-          <DeleteComicModal
-            title={state["identity"].Title}
-            toggleModal={toggleModal}
-            id={state["identity"].ItemId}
-          />
-        )}
-        {openModal.edit && (
-          <EditComicModal
-            item={state["identity"]}
-            toggleModal={toggleModal}
-            update={setData}
-            setItem={setState}
-          />
-        )}
+        {updateIsOpen && <ModalUpdate toggleModal={setUpdateIsOpen} item={state['identity']} type={itemType}/>}
 
         <div
           style={{
@@ -59,12 +36,9 @@ const ItemInfoPage = () => {
             bottom: "1%",
           }}
         >
-          <FloatingButton type="edit" callback={() => toggleModal("edit")} />
-          <FloatingButton
-            type="delete"
-            callback={() => toggleModal("delete")}
-          />
+          <FloatingButton type="edit" callback={() => setUpdateIsOpen(true)} />
         </div>
+
         <InfoBar item={state["identity"]} />
 
         <div style={{ margin: "20px" }}></div>

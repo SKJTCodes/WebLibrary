@@ -30,16 +30,17 @@ router.post("/upd", (req, res) => {
     else data[keys[i]] = req.body[keys[i]].toLowerCase().trim();
     i++;
   }
-
-  updateEntry("COMICS", id, data)
-    .then((data) => {
-      console.log(data);
-      res.send(data);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(404).send(err);
-    });
+  console.log(`${id}, ${JSON.stringify(data)}`)
+  res.send('OK')
+  // updateEntry("COMICS", id, data)
+  //   .then((data) => {
+  //     console.log(data);
+  //     res.send(data);
+  //   })
+  //   .catch((err) => {
+  //     console.error(err);
+  //     res.status(404).send(err);
+  //   });
 });
 
 /* GET Library data, Page by Page */
