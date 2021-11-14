@@ -1,8 +1,14 @@
 import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 // Styles
 import { Wrapper, Content } from "./Pagination.styles";
+// Helper
+import Helper from "../../Helper";
 
-const Pagination = ({ curPage, totalPages, setPage, total }) => {
+const Pagination = ({ curPage, totalPages, total, itemType }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   let pages = Array.from(
     { length: totalPages < total ? totalPages : total },
     (_, i) => i + 1
@@ -25,15 +31,20 @@ const Pagination = ({ curPage, totalPages, setPage, total }) => {
     return a - b;
   });
 
+  const navigatePage = (pageNum) => {
+    const searchString = Helper.appendSearchString("page", pageNum, location.search)
+    navigate(`/${itemType}${searchString}`)
+  };
+
   return (
     <Wrapper>
       <Content>
-        {curPage > 1 && <div onClick={() => setPage(1)}>&laquo;</div>}
+        {curPage > 1 && <div onClick={() => navigatePage(1)}>&laquo;</div>}
         {pages.map((pageNum) => {
           return (
             <div
               key={pageNum}
-              onClick={() => setPage(pageNum)}
+              onClick={() => navigatePage(pageNum)}
               className={pageNum === curPage ? "active" : ""}
             >
               {pageNum}
@@ -41,7 +52,7 @@ const Pagination = ({ curPage, totalPages, setPage, total }) => {
           );
         })}
         {curPage < totalPages && (
-          <div onClick={() => setPage(totalPages)}>&raquo;</div>
+          <div onClick={() => navigatePage(totalPages)}>&raquo;</div>
         )}
       </Content>
     </Wrapper>

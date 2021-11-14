@@ -10,10 +10,9 @@ const LIBSTATE = {
 };
 
 // Fetch All library Items
-export const useFetchLib = (itemType, sortVal = 'DateCreated') => {
+export const useFetchLib = (itemType, sortVal = "DateCreated", page = 1) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [pageNum, setPageNum] = useState(1);
   const [state, setState] = useState(LIBSTATE);
 
   const fetchLib = async (page, itemType, sort) => {
@@ -30,10 +29,10 @@ export const useFetchLib = (itemType, sortVal = 'DateCreated') => {
   };
 
   useEffect(() => {
-    fetchLib(pageNum, itemType, sortVal);
-  }, [pageNum, sortVal, itemType]);
+    fetchLib(page, itemType, sortVal);
+  }, [page, sortVal, itemType]);
 
-  return { error, loading, state, setPageNum };
+  return { error, loading, state };
 };
 
 // Fetch Single Entry

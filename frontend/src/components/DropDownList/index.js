@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+// Helper
+import Helper from "../../Helper";
 // Styles
 import { Wrapper, Header, Content } from "./DropDownList.styles";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
@@ -24,6 +26,7 @@ const List = ({ list, handleListClick }) => {
 
 const DropDownList = ({ items = [], selected, itemType }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [isOpen, setIsOpen] = useState(false);
   // convert array to object list for classname allocation
@@ -40,15 +43,11 @@ const DropDownList = ({ items = [], selected, itemType }) => {
     const { value } = item;
 
     setIsOpen((state) => !state);
-    navigate(`/${itemType}?sort=${value}`);
-    // setSelected(value);
 
-    // setList((state) =>
-    //   state.map((item) => ({
-    //     ...item,
-    //     selected: item.value === value ? true : false,
-    //   }))
-    // );
+    let searchText = Helper.appendSearchString("sort", value, location.search);
+    searchText = Helper.appendSearchString("page", 1, searchText);
+
+    navigate(`/${itemType}${searchText}`);
   };
 
   return (

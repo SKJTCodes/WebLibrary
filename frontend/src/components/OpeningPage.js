@@ -17,9 +17,10 @@ const OpeningPage = () => {
   // URL Param
   const { itemType } = useParams();
   // get library list items
-  const { error, loading, state, setPageNum } = useFetchLib(
+  const { error, loading, state } = useFetchLib(
     itemType,
-    params.getAll("sort")[0]
+    params.getAll("sort")[0],
+    params.getAll("page")[0]
   );
 
   if (error) return <div>Encountered an Error ...</div>;
@@ -79,7 +80,7 @@ const OpeningPage = () => {
         <Pagination
           curPage={state.page}
           totalPages={state.total_pages}
-          setPage={setPageNum}
+          itemType={itemType}
           total={window.innerWidth < 500 ? (window.innerWidth ? 3 : 5) : 9}
         />
       )}
