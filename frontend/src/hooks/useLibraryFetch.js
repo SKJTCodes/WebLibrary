@@ -10,7 +10,7 @@ const LIBSTATE = {
 };
 
 // Fetch All library Items
-export const useFetchLib = (itemType, sortVal = null) => {
+export const useFetchLib = (itemType, sortVal = 'DateCreated') => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [pageNum, setPageNum] = useState(1);

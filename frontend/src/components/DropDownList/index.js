@@ -27,14 +27,14 @@ const DropDownList = ({ items = [], selected, itemType }) => {
 
   const [isOpen, setIsOpen] = useState(false);
   // convert array to object list for classname allocation
-  const [list, setList] = useState(
-    items.map((item, i) => ({
-      id: i,
-      selected: item.value === selected ? true : false,
-      title: item.title,
-      value: item.value,
-    }))
-  );
+  const list = items.map((item, i) => ({
+    id: i,
+    selected: item.value === selected ? true : false,
+    title: item.title,
+    value: item.value,
+  }));
+
+  if (!selected) list[0]["selected"] = true;
 
   const handleListClick = (item) => {
     const { value } = item;
