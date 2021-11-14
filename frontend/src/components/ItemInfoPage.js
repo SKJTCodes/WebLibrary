@@ -50,7 +50,7 @@ const ItemInfoPage = () => {
               image={
                 itemType === "c"
                   ? `${process.env.REACT_APP_DOMAIN}${item.PagePaths[0]}`
-                  : null
+                  : `${process.env.REACT_APP_DOMAIN}${state['identity'].CoverPath}`
               }
               itemId={`${item.ItemId}/${
                 item[`${Helper.titleCase(tableType)}No`]
