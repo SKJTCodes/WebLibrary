@@ -6,7 +6,7 @@ export const useSearch = (searchText) => {
   const [text, setText] = useState(searchText);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [state, setState] = useState([]);
+  const [state, setState] = useState({img: [], vid: []});
 
   const getSearchResults = async (text) => {
     try {

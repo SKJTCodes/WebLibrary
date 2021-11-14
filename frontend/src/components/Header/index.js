@@ -17,7 +17,7 @@ const Header = () => (
       <Link to="/u">
         <span>Upload</span>
       </Link>
-      <Link to="/cs">
+      <Link to="/s">
         <span>Search</span>
       </Link>
     </Content>

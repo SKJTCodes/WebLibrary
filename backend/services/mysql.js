@@ -117,12 +117,13 @@ module.exports.getCurAdjEpisodes = async function (itemId, epNum) {
 
     const curIndex = ep_list.findIndex((x) => x.EpisodeNo === parseInt(epNum));
 
-    if (curIndex === -1) return {
-      item: item[0],
-      curEp: {},
-      PrevEpNum: -1,
-      NextEpNum: -1
-    }
+    if (curIndex === -1)
+      return {
+        item: item[0],
+        curEp: {},
+        PrevEpNum: -1,
+        NextEpNum: -1,
+      };
 
     const cur_ep = ep_list[curIndex];
 
@@ -216,18 +217,24 @@ module.exports.getCurAdjChptPages = async function (itemId, chptNum) {
 module.exports.search = async function (searchText) {
   try {
     const searchComic = await getQuery(
-      `SELECT * FROM comics WHERE MATCH (Title,Author,Description) AGAINST ('${searchText}' IN BOOLEAN MODE)`
+      `SELECT * 
+      FROM Library_Items 
+      WHERE MATCH (Title,Maker,Description) 
+      AGAINST ('"${searchText}"' IN BOOLEAN MODE)`
     );
-    const searchGenre = await getQuery(`
-  SELECT * 
-  FROM genres AS g 
-  INNER JOIN comics AS c
-  WHERE g.ComicId=c.ComicId
-  AND MATCH (g.Text)
-  AGAINST ('${searchText}' IN BOOLEAN MODE)
-  `);
+
+    const searchGenre = await getQuery(
+      `SELECT * 
+      FROM Genres AS g 
+      INNER JOIN Library_Items AS c
+      WHERE g.ItemId=c.ItemId
+      AND MATCH (g.Text)
+      AGAINST ('"${searchText}"' IN BOOLEAN MODE)`
+    );
+
     const data = [...searchComic, ...searchGenre];
-    return data;
+    const results = {img: data.filter(item => item.ItemType === 'img'), vid: data.filter(item => item.ItemType === 'vid')}
+    return results;
   } catch (err) {
     throw err;
   }

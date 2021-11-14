@@ -30,7 +30,7 @@ const InfoBar = ({ item }) => {
             </Link>
             <h3>GENRE</h3>
             {item.Genre.map((genre) => (
-              <Link key={genre} to={`/cs/${genre}`}>
+              <Link key={genre} to={`/s?searchText=${genre}`}>
                 <Pill>{`${genre}`}</Pill>
               </Link>
             ))}

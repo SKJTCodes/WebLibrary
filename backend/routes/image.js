@@ -5,7 +5,7 @@ const {
   getGenre,
   getPage,
   getInfoAll,
-  getCurAdjChptPages
+  getCurAdjChptPages,
 } = require("../services/mysql");
 const { deleteFolder } = require("../services/filesystem");
 const path = require("path");
@@ -30,8 +30,8 @@ router.post("/upd", (req, res) => {
     else data[keys[i]] = req.body[keys[i]].toLowerCase().trim();
     i++;
   }
-  console.log(`${id}, ${JSON.stringify(data)}`)
-  res.send('OK')
+  console.log(`${id}, ${JSON.stringify(data)}`);
+  res.send("OK");
   // updateEntry("COMICS", id, data)
   //   .then((data) => {
   //     console.log(data);
@@ -50,15 +50,17 @@ router.get("/l", function (req, res) {
     num = 20;
   }
 
-  getPage(parseInt(page), "Library_Items", 'img', sort, parseInt(num)).then((data) => {
-    res.json({ ...data, page: parseInt(page) });
-  });
+  getPage(parseInt(page), "Library_Items", "img", sort, parseInt(num)).then(
+    (data) => {
+      res.json({ ...data, page: parseInt(page) });
+    }
+  );
 });
 
 /* Get Entry Info, including Chapter info from sub table */
 router.get("/entry", function (req, res) {
   const { itemId } = req.query;
-  getInfoAll(itemId, 'Chapters')
+  getInfoAll(itemId, "Chapters")
     .then((data) => {
       getGenre(itemId).then((genres) => {
         data["identity"] = { ...data["identity"], Genre: genres };
@@ -72,16 +74,18 @@ router.get("/entry", function (req, res) {
 });
 
 // Get Search Results
-router.get("/search", function(req, res) {
-  const {text} = req.query;
-  
-  search(text).then(data => {
-    res.json(data)
-  }).catch(err => {
-    console.error(err)
-    res.status(404).send(err)
-  })
-})
+router.get("/search", function (req, res) {
+  const { text } = req.query;
+
+  search(text)
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(404).send(err);
+    });
+});
 
 const delCm = async (itemId) => {
   const data = await deleteAll(itemId, "COMICS", "COMIC_ITEMS");
@@ -109,16 +113,18 @@ router.delete("/entry", function (req, res) {
 });
 
 // Get Current/Next/Prev Chapter Page Paths
-router.get("/page", function(req, res) {
-  const {itemId, chptNum} = req.query;
+router.get("/page", function (req, res) {
+  const { itemId, chptNum } = req.query;
 
-  getCurAdjChptPages(itemId, chptNum).then((data) => {
-    res.json(data);
-  }).catch((err) => {
-    console.error(err);
-    res.status(404).send(err);
-  })
-})
+  getCurAdjChptPages(itemId, chptNum)
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(404).send(err);
+    });
+});
 
 // Testing
 router.get("/test", function (req, res) {

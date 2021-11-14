@@ -1,8 +1,9 @@
-import React from "react";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 // Components
 import Grid from "./Grid";
 import Thumb from "./Thumb";
+import Button from "./Button";
 import Spinner from "./Spinner";
 import SearchBar from "./SearchBar";
 // Hooks
@@ -11,32 +12,46 @@ import { useSearch } from "../hooks/useSearch";
 import Helper from "../Helper";
 
 const SearchPage = () => {
-  const { searchText } = useParams();
+  const [params] = useSearchParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [type, setType] = useState("img");
 
-  const {
-    state: comics,
-    text,
-    loading,
-    error,
-    setText,
-  } = useSearch(searchText ? searchText : "");
+  const { state, loading, error, text, setText } = useSearch(
+    params.getAll("searchText")
+  );
 
   if (error) return <div>Something went wrong ....</div>;
-  if (loading) return <Spinner />;
+
+  const handleNavigate = (to) => {
+    const urlSearchText = Helper.appendSearchString(
+      "searchText",
+      text,
+      location.search
+    );
+    navigate(urlSearchText);
+    navigate(to);
+  };
 
   return (
     <>
-      <SearchBar setSearchTerm={setText} searchTerm={text} />
-      <div style={{margin: "20px"}}></div>
+      <SearchBar searchText={text} setSearchText={setText} />
+      <div style={{ margin: "20px" }}></div>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Button text={"Comics"} callback={() => setType("img")} />
+        <Button text={"Videos"} callback={() => setType("vid")} />
+      </div>
+      {loading && <Spinner />}
       <Grid>
-        {comics.map((comic) => (
+        {state[type].map((item) => (
           <Thumb
-            key={comic.ComicId}
-            itemId={comic.ComicId}
+            key={item.ItemId}
+            itemId={item.ItemId}
             type="c"
-            image={`${process.env.REACT_APP_DOMAIN}${comic.CoverPath}`}
-            title={Helper.titleCase(comic.Title)}
+            image={`${process.env.REACT_APP_DOMAIN}${item.CoverPath}`}
+            title={Helper.titleCase(item.Title)}
             clickable
+            cb={handleNavigate}
           />
         ))}
       </Grid>
