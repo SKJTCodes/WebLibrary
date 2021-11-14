@@ -8,10 +8,10 @@ const Header = () => (
       <Link to="/">
         <h3>Library</h3>
       </Link>
-      <Link to="/c">
+      <Link to="/c?sort=DateCreated">
         <span>Comic</span>
       </Link>
-      <Link to="/v">
+      <Link to="/v?sort=DateCreated">
         <span>Video</span>
       </Link>
       <Link to="/u">

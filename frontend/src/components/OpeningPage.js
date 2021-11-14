@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 // Components
 import Spinner from "./Spinner";
 import DropDownList from "./DropDownList";
@@ -12,10 +12,15 @@ import Helper from "../Helper";
 import { useFetchLib } from "../hooks/useLibraryFetch";
 
 const OpeningPage = () => {
+  // Query Params after '?' in url
+  const [params] = useSearchParams();
   // URL Param
   const { itemType } = useParams();
   // get library list items
-  const { error, loading, state, setPageNum, setSort } = useFetchLib(itemType);
+  const { error, loading, state, setPageNum } = useFetchLib(
+    itemType,
+    params.getAll("sort")[0]
+  );
 
   if (error) return <div>Encountered an Error ...</div>;
   if (loading) return <Spinner />;
@@ -42,11 +47,15 @@ const OpeningPage = () => {
           }}
         >
           <DropDownList
-            list={[
-              "Most Recent",
-              itemType === "c" ? "Most Chapters" : "Most Episodes",
+            items={[
+              { title: "Most Recent", value: "DateCreated" },
+              {
+                title: itemType === "c" ? "Most Chapters" : "Most Episodes",
+                value: "TotalEntries",
+              },
             ]}
-            setSort={setSort}
+            itemType={itemType}
+            selected={params.getAll("sort")[0]}
           />
         </div>
       </div>

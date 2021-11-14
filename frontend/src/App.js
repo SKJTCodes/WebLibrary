@@ -24,13 +24,11 @@ const App = () => (
       <Route path="/:itemType" element={<OpeningPage />} />
       <Route path="/:itemType/:itemId" element={<ItemInfoPage />} />
       <Route path="/:itemType/:itemId/:num" element={<Viewer />} />
-      {/* <Route path="/c/:comicId" element={<ComicPage />} /> */}
-      {/* <Route path="/cc/:comicId/:chptId" element={<ComicReader />} /> */}
       <Route path="/cs/:searchText" element={<SearchPage />} />
       <Route path="/cs/" element={<SearchPage />} />
       <Route path="/u" element={<UploadPage />} />
       <Route path="/*" element={<NotFound />} />
-      <Route path="/" element={<Navigate replace to="/c" />} />
+      <Route path="/" element={<Navigate replace to="/c?sort=DateCreated" />} />
     </Routes>
     <Footer />
     <GlobalStyle />
