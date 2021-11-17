@@ -58,7 +58,7 @@ const SearchPage = () => {
           <Thumb
             key={item.ItemId}
             itemId={item.ItemId}
-            type="c"
+            type={type === TYPES[0] ? 'c' : 'v'}
             image={`${process.env.REACT_APP_DOMAIN}${item.CoverPath}`}
             title={Helper.titleCase(item.Title)}
             clickable
