@@ -47,6 +47,14 @@ export const useFetchEntry = (itemId, itemType) => {
       setLoading(true);
 
       const items = await API.fetchEntry(itemId, itemType);
+      const key =
+        itemType === "c"
+          ? ["chapters", "ChapterNo"]
+          : ["episodes", "EpisodeNo"];
+      items[key[0]].sort((a, b) => {
+        return a[key[1]] - b[key[1]];
+      });
+      console.log(items);
       setState(items);
       setLoading(false);
     } catch (err) {
