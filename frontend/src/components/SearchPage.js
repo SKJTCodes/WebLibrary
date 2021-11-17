@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 // Components
 import Grid from "./Grid";
@@ -11,15 +11,27 @@ import { useSearch } from "../hooks/useSearch";
 // Helper
 import Helper from "../Helper";
 
+const TYPES = ['img', 'vid']
+
 const SearchPage = () => {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const [type, setType] = useState("img");
+  const [type, setType] = useState(TYPES[0]);
 
   const { state, loading, error, text, setText } = useSearch(
     params.getAll("searchText")
   );
+  
+  useEffect(() => {
+    if(state[TYPES[0]].length < state[TYPES[1]].length) {
+      setType(TYPES[1])
+    }
+    else {
+      console.log("HERE2")
+      setType(TYPES[0])
+    }
+  }, [state]);
 
   if (error) return <div>Something went wrong ....</div>;
 
