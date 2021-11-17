@@ -14,7 +14,7 @@ const Cover = ({ image_path }) => (
   </Image>
 );
 
-const InfoBar = ({ item }) => {
+const InfoBar = ({ item, type }) => {
   return (
     <Wrapper backdrop={item.CoverPath}>
       <div className="transparent">
@@ -24,8 +24,8 @@ const InfoBar = ({ item }) => {
             <h1>{Helper.titleCase(item.Title)}</h1>
             <h3>DESCRIPTION</h3>
             <p>{item.Description}</p>
-            <h3>AUTHOR</h3>
-            <Link to={`/cs/${item.Maker}`}>
+            <h3>{type === "Episode" ? "CREATOR" : "AUTHOR"}</h3>
+            <Link to={`/s?searchText=${item.Maker}`}>
               <span className="author">{Helper.titleCase(item.Maker)}</span>
             </Link>
             <h3>GENRE</h3>

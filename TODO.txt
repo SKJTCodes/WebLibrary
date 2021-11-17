@@ -1,4 +1,4 @@
-- video player
+- video player - done
 - Update modal
 - upload comic
 - Delete Chapter, Edit Chapter info

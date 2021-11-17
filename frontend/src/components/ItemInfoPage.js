@@ -39,7 +39,7 @@ const ItemInfoPage = () => {
           <FloatingButton type="edit" callback={() => setUpdateIsOpen(true)} />
         </div>
 
-        <InfoBar item={state["identity"]} />
+        <InfoBar item={state["identity"]} type={tableType}/>
 
         <div style={{ margin: "20px" }}></div>
 
