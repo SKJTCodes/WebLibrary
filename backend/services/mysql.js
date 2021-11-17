@@ -81,7 +81,7 @@ module.exports.getPage = async function (
       SELECT *
       FROM ${table}
       WHERE ItemType='${type}'
-      ORDER BY ${sort} DESC
+      ORDER BY ${sort} ${sort === 'Title' ? 'ASC' : 'DESC'}
       LIMIT ${offset},${nPerPage}
       `;
     const pageData = await getQuery(query);

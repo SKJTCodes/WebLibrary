@@ -54,6 +54,7 @@ const OpeningPage = () => {
                 title: itemType === "c" ? "Most Chapters" : "Most Episodes",
                 value: "TotalEntries",
               },
+              {title: "Alphabetical", value: "Title"}
             ]}
             itemType={itemType}
             selected={params.getAll("sort")[0]}

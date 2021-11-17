@@ -28,7 +28,6 @@ const SearchPage = () => {
       setType(TYPES[1])
     }
     else {
-      console.log("HERE2")
       setType(TYPES[0])
     }
   }, [state]);
