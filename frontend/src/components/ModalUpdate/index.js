@@ -4,11 +4,13 @@ import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRigh
 import { Label, Button, SubBtn, Pill, GenreBar } from "./ModalUpdate.styles";
 // Components
 import Modal from "../Modal";
+import Spinner from "../Spinner";
 
-const ModalUpdate = ({ toggleModal, item, type }) => {
+const ModalUpdate = ({ toggleModal, item, type, setInfoBar, setData }) => {
+  // Set State
   const [state, setState] = useState({ Title: "", Genre: [], Maker: "" });
   const [genre, setGenre] = useState([]);
-  // TODO: Update sends results to server and server needs to process it
+
   const addTag = (item) => {
     setGenre((state) => [...state, item]);
     document.getElementById("genre").value = "";
@@ -16,6 +18,13 @@ const ModalUpdate = ({ toggleModal, item, type }) => {
 
   const removeTag = (index) => {
     setGenre((state) => state.filter((_, i) => i !== index));
+  };
+
+  const handleUpdate = () => {
+    const updState = { ...state, Genre: genre };
+    setData(updState);
+    setInfoBar((state) => ({ ...state, identity: updState }));
+    toggleModal((state) => !state);
   };
 
   useEffect(() => {
@@ -92,7 +101,7 @@ const ModalUpdate = ({ toggleModal, item, type }) => {
             marginBottom: "25px",
           }}
         >
-          <Button onClick={() => {}}>Submit</Button>
+          <Button onClick={() => handleUpdate()}>Submit</Button>
         </div>
       </Modal>
     </>

@@ -81,7 +81,7 @@ module.exports.getPage = async function (
       SELECT *
       FROM ${table}
       WHERE ItemType='${type}'
-      ORDER BY ${sort} ${sort === 'Title' ? 'ASC' : 'DESC'}
+      ORDER BY ${sort} ${sort === "Title" ? "ASC" : "DESC"}
       LIMIT ${offset},${nPerPage}
       `;
     const pageData = await getQuery(query);
@@ -233,8 +233,96 @@ module.exports.search = async function (searchText) {
     );
 
     const data = [...searchComic, ...searchGenre];
-    const results = {img: data.filter(item => item.ItemType === 'img'), vid: data.filter(item => item.ItemType === 'vid')}
+    const results = {
+      img: data.filter((item) => item.ItemType === "img"),
+      vid: data.filter((item) => item.ItemType === "vid"),
+    };
     return results;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// Add Genre Table entry
+const addGenre = async function (itemId, genreList) {
+  try {
+    const maxId = await getQuery(`SELECT MAX(GenreId) FROM Genres`);
+    const newId = maxId[0]["MAX(GenreId)"] + 1;
+    let addStr = "INSERT INTO Genres(GenreId,Text,ItemId) VALUES ";
+    const valueArray = new Array();
+
+    for (let i = 0; i < genreList.length; i++) {
+      valueArray.push(`(${newId + i},'${genreList[i]}',${itemId})`);
+    }
+    const value = valueArray.join(",");
+    addStr = addStr + value + ";";
+    await getQuery(addStr);
+    return `Successfully added new entry to Genres`;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// Remove Genre Table entry
+const deleteGenre = async function (itemId, genreList) {
+  try {
+    const genreStr = "'" + genreList.join("','") + "'";
+    const query = `
+      DELETE FROM Genres 
+      WHERE ItemId=${itemId}
+      AND Text IN (${genreStr})
+    `;
+    await getQuery(query);
+    return `Successfully deleted Genres entry for ItemId:${itemId}`;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// Check which genre to delete and which to keep or add
+const checkGenre = async function (itemId, genreList) {
+  const itemGenres = await getQuery(
+    `SELECT Text FROM Genres WHERE ItemId=${itemId}`
+  );
+  const genres = itemGenres.map((i) => i.Text);
+
+  if (genreList.length === 0) return { delete: genres };
+
+  if (itemGenres.length === 0) return { delete: [], add: genreList };
+  else {
+    // those that are not in Table
+    const toAdd = genreList.filter((x) => !genres.includes(x));
+    // those from the table that are not in new Genre list
+    const toRemove = genres.filter((x) => !genreList.includes(x));
+    return { delete: toRemove, add: toAdd };
+  }
+
+  return { delete: [], add: [] };
+};
+
+// Update Library_Items Table
+module.exports.updateLib = async function (itemId, update_vals) {
+  try {
+    // create the set string for update query
+    let setStr = [];
+    for (const [key, value] of Object.entries(update_vals)) {
+      if (key === "Genre") {
+        const genreStatus = await checkGenre(itemId, value);
+        if (genreStatus["delete"].length > 0)
+          await deleteGenre(itemId, genreStatus["delete"]);
+        if (genreStatus["add"].length > 0)
+          await addGenre(itemId, genreStatus["add"]);
+      } else if (typeof value === "number") setStr.push(`${key}=${value}`);
+      else if (typeof value === "string") setStr.push(`${key}='${value}'`);
+    }
+    setStr = setStr.join(", ");
+    const query = `
+      UPDATE Library_Items
+      SET ${setStr}
+      WHERE ItemId=${itemId}
+    `
+    await getQuery(query)
+    return `Sucessfully Updated ${itemId}`;
   } catch (err) {
     throw err;
   }

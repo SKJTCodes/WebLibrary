@@ -7,6 +7,8 @@ import { SubBtn, Pill, GenreBar } from "./ComicModal/ComicModal.styles";
 import { useUploadComic } from "../hooks/useUpload";
 // Helper
 import Helper from "../Helper";
+// Components
+import Spinner from "./Spinner";
 
 const InputTb = ({ label, fields, setFields, addTag }) => (
   <Wrapper>
@@ -44,7 +46,8 @@ const SubmitBtn = ({ text, action }) => (
 
 const UForm = ({ upload, setFields, fields, setFiles }) => {
   const addTag = (item) => {
-    if(item !== "") setFields((state) => ({ ...state, genre: [...state.genre, item] }));
+    if (item !== "")
+      setFields((state) => ({ ...state, genre: [...state.genre, item] }));
     document.getElementById("genre").value = "";
   };
   const removeTag = (index) => {
@@ -144,6 +147,7 @@ const UploadPage = () => {
         >
           <b>Upload</b>
         </div>
+        {loading && <Spinner />}
         <UForm
           upload={upload}
           setFields={setFields}

@@ -9,6 +9,7 @@ const serveIndex = require("serve-index");
 var imageRouter = require("./routes/image");
 var videoRouter = require("./routes/video");
 const uploadRouter = require("./routes/upload");
+const commonRouter = require("./routes/common");
 
 var app = express();
 
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", uploadRouter);
 app.use("/c", imageRouter);
 app.use("/v", videoRouter);
+app.use("/com", commonRouter);
 app.use(
   "/public",
   express.static("public"),

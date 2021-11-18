@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 // Hooks
 import { useFetchEntry } from "../hooks/useLibraryFetch";
+import { useUpdateItem } from "../hooks/useUpload";
 // Components
 import FloatingButton from "./FloatingButton";
 import ModalUpdate from "./ModalUpdate";
@@ -16,18 +17,29 @@ const ItemInfoPage = () => {
   // URL Param
   const { itemType, itemId } = useParams();
   // Get Chapter/ Item Info from Server
-  const { state, loading, error } = useFetchEntry(itemId, itemType);
+  const { state, loading, error, setState } = useFetchEntry(itemId, itemType);
+  // For Update entry info
+  const { setData, error2, loading2 } = useUpdateItem();
+
   const [updateIsOpen, setUpdateIsOpen] = useState(false);
 
   const tableType = itemType === "c" ? "chapter" : "episode";
 
-  if (error) return <div>Encountered an Error ...</div>;
-  if (loading) return <Spinner />;
+  if (error | error2) return <div>Encountered an Error ...</div>;
+  if (loading | loading2) return <Spinner />;
 
   if (Object.keys(state).length > 0)
     return (
       <>
-        {updateIsOpen && <ModalUpdate toggleModal={setUpdateIsOpen} item={state['identity']} type={itemType}/>}
+        {updateIsOpen && (
+          <ModalUpdate
+            toggleModal={setUpdateIsOpen}
+            item={state["identity"]}
+            type={itemType}
+            setInfoBar={setState}
+            setData={setData}
+          />
+        )}
 
         <div
           style={{
@@ -39,7 +51,7 @@ const ItemInfoPage = () => {
           <FloatingButton type="edit" callback={() => setUpdateIsOpen(true)} />
         </div>
 
-        <InfoBar item={state["identity"]} type={tableType}/>
+        <InfoBar item={state["identity"]} type={tableType} />
 
         <div style={{ margin: "20px" }}></div>
 
@@ -50,7 +62,7 @@ const ItemInfoPage = () => {
               image={
                 itemType === "c"
                   ? `${process.env.REACT_APP_DOMAIN}${item.PagePaths[0]}`
-                  : `${process.env.REACT_APP_DOMAIN}${state['identity'].CoverPath}`
+                  : `${process.env.REACT_APP_DOMAIN}${state["identity"].CoverPath}`
               }
               itemId={`${item.ItemId}/${
                 item[`${Helper.titleCase(tableType)}No`]

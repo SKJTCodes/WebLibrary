@@ -30,3 +30,32 @@ export const useUploadComic = () => {
   }, [fd, isInitial]);
   return { loading, error, progress, setFd, setIsInitial };
 };
+
+
+export const useUpdateItem = () => {
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({});
+
+  const updateEntry = async (dat) => {
+    try {
+      setError(false);
+      setLoading(true);
+
+      console.log(dat)
+      await API.updateEntry(dat);
+    } catch (err) {
+      console.error(err);
+      setError(true);
+    }
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (Object.keys(data).length === 0) return;
+    updateEntry(data);
+  }, [data]);
+
+  return { setData, error, loading };
+};

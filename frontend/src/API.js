@@ -29,10 +29,10 @@ const apiSettings = {
     });
     return res.data;
   },
-  fetchSearch: async (searchText, type) => {
+  fetchSearch: async (searchText) => {
     const res = await axios({
       method: "GET",
-      url: `${process.env.REACT_APP_DOMAIN}${type}/search?text=${searchText}`,
+      url: `${process.env.REACT_APP_DOMAIN}com/search?text=${searchText}`,
     });
     return res.data;
   },
@@ -48,10 +48,10 @@ const apiSettings = {
 
     return res.status;
   },
-  updateEntry: async (type, updData) => {
+  updateEntry: async (updData) => {
     const res = await axios({
       method: "POST",
-      url: `${process.env.REACT_APP_DOMAIN}${type}/upd`,
+      url: `${process.env.REACT_APP_DOMAIN}com/upd`,
       data: updData,
     });
     console.log(res.data);
