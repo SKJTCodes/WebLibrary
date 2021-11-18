@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
 // Styles
 import { Btn, Wrapper, Label } from "./FormInputs/FormInput.styles";
-import { SubBtn, Pill, GenreBar } from "./ComicModal/ComicModal.styles";
+import { SubBtn, Pill, GenreBar } from "./ModalUpdate/ModalUpdate.styles";
 // Hooks
 import { useUploadComic } from "../hooks/useUpload";
 // Helper
