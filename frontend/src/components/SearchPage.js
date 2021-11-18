@@ -11,7 +11,7 @@ import { useSearch } from "../hooks/useSearch";
 // Helper
 import Helper from "../Helper";
 
-const TYPES = ['img', 'vid']
+const TYPES = ["img", "vid"];
 
 const SearchPage = () => {
   const [params] = useSearchParams();
@@ -22,13 +22,12 @@ const SearchPage = () => {
   const { state, loading, error, text, setText } = useSearch(
     params.getAll("searchText")
   );
-  
+
   useEffect(() => {
-    if(state[TYPES[0]].length < state[TYPES[1]].length) {
-      setType(TYPES[1])
-    }
-    else {
-      setType(TYPES[0])
+    if (state[TYPES[0]].length < state[TYPES[1]].length) {
+      setType(TYPES[1]);
+    } else {
+      setType(TYPES[0]);
     }
   }, [state]);
 
@@ -54,11 +53,12 @@ const SearchPage = () => {
       </div>
       {loading && <Spinner />}
       <Grid>
+        {console.log(state)}
         {state[type].map((item) => (
           <Thumb
             key={item.ItemId}
             itemId={item.ItemId}
-            type={type === TYPES[0] ? 'c' : 'v'}
+            type={type === TYPES[0] ? "c" : "v"}
             image={`${process.env.REACT_APP_DOMAIN}${item.CoverPath}`}
             title={Helper.titleCase(item.Title)}
             clickable

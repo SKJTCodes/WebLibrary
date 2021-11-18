@@ -4,7 +4,6 @@ import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRigh
 import { Label, Button, SubBtn, Pill, GenreBar } from "./ModalUpdate.styles";
 // Components
 import Modal from "../Modal";
-import Spinner from "../Spinner";
 
 const ModalUpdate = ({ toggleModal, item, type, setInfoBar, setData }) => {
   // Set State

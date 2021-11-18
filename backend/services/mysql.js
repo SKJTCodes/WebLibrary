@@ -1,4 +1,5 @@
 const dbconnection = require("./mysqlconn");
+const helper = require("./helper");
 
 const getQuery = async function (qStr) {
   try {
@@ -216,27 +217,32 @@ module.exports.getCurAdjChptPages = async function (itemId, chptNum) {
 // Search Table
 module.exports.search = async function (searchText) {
   try {
-    const searchComic = await getQuery(
-      `SELECT * 
+    console.log(searchText);
+    const searchLibItems = await getQuery(
+      `SELECT ItemId, Title, ItemType, CoverPath
       FROM Library_Items 
       WHERE MATCH (Title,Maker,Description) 
       AGAINST ('"${searchText}"' IN BOOLEAN MODE)`
     );
 
     const searchGenre = await getQuery(
-      `SELECT * 
+      `SELECT l.ItemId, l.Title, l.ItemType, CoverPath 
       FROM Genres AS g 
-      INNER JOIN Library_Items AS c
-      WHERE g.ItemId=c.ItemId
+      INNER JOIN Library_Items AS l
+      WHERE g.ItemId=l.ItemId
       AND MATCH (g.Text)
       AGAINST ('"${searchText}"' IN BOOLEAN MODE)`
     );
 
-    const data = [...searchComic, ...searchGenre];
+    const data = [...searchLibItems, ...searchGenre];
     const results = {
-      img: data.filter((item) => item.ItemType === "img"),
+      img: helper.getDistinctObjArr(
+        data.filter((item) => item.ItemType === "img"),
+        "ItemId"
+      ),
       vid: data.filter((item) => item.ItemType === "vid"),
     };
+
     return results;
   } catch (err) {
     throw err;
@@ -320,8 +326,8 @@ module.exports.updateLib = async function (itemId, update_vals) {
       UPDATE Library_Items
       SET ${setStr}
       WHERE ItemId=${itemId}
-    `
-    await getQuery(query)
+    `;
+    await getQuery(query);
     return `Sucessfully Updated ${itemId}`;
   } catch (err) {
     throw err;
