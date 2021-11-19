@@ -217,7 +217,6 @@ module.exports.getCurAdjChptPages = async function (itemId, chptNum) {
 // Search Table
 module.exports.search = async function (searchText) {
   try {
-    console.log(searchText);
     const searchLibItems = await getQuery(
       `SELECT ItemId, Title, ItemType, CoverPath
       FROM Library_Items 
@@ -302,8 +301,6 @@ const checkGenre = async function (itemId, genreList) {
     const toRemove = genres.filter((x) => !genreList.includes(x));
     return { delete: toRemove, add: toAdd };
   }
-
-  return { delete: [], add: [] };
 };
 
 // Update Library_Items Table
@@ -329,6 +326,37 @@ module.exports.updateLib = async function (itemId, update_vals) {
     `;
     await getQuery(query);
     return `Sucessfully Updated ${itemId}`;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// Delete All items associated with ItemId
+module.exports.deleteAll = async function (itemId, itemType) {
+  try {
+    // Delete Pages if Chapter
+    if (itemType === "c") {
+      // Get Chapter that will be deleted
+      const chaptInfo = await getQuery(
+        `SELECT ChptId FROM Chapters WHERE itemId=${itemId}`
+      );
+      const delChapt = chaptInfo.map((item) => item.ChptId);
+      await getQuery(
+        `DELETE FROM Pages WHERE ChptId IN (${delChapt.join(",")})`
+      );
+    }
+
+    // Delete Episode/Chapter
+    await getQuery(`DELETE FROM ${
+      itemType === "c" ? "Chapters" : "Episodes"
+    } WHERE ItemId=${itemId}
+  `);
+    // Delete Genre
+    await getQuery(`DELETE FROM Genres WHERE ItemId=${itemId}`);
+    // Delete LibItem
+    await getQuery(`DELETE FROM Library_Items WHERE ItemId=${itemId}`);
+
+    return `Successfully deleted all ID:${itemId}`;
   } catch (err) {
     throw err;
   }

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 // Hooks
 import { useFetchEntry } from "../hooks/useLibraryFetch";
 import { useUpdateItem } from "../hooks/useUpload";
+import { useDeleteItem } from "../hooks/useDelete";
 // Components
 import FloatingButton from "./FloatingButton";
 import ModalUpdate from "./ModalUpdate";
@@ -15,13 +16,16 @@ import Grid from "./Grid";
 import Helper from "../Helper";
 
 const ModalDelete = ({ type, item, toggleModal }) => {
+  const { error, loading, isDeleted, setItem } = useDeleteItem();
+
   const nav = useNavigate();
-  const done = false;
 
   useEffect(() => {
-    if (!done) return;
+    if (!isDeleted) return;
     nav("/");
-  }, [done, nav]);
+  }, [isDeleted, nav]);
+
+  if (error) return <div>Something went wrong ....</div>;
 
   return (
     <Modal
@@ -29,7 +33,9 @@ const ModalDelete = ({ type, item, toggleModal }) => {
       setOpenModal={() => toggleModal("delete")}
       cancelButton="No"
       acceptButton="Yes"
+      callback={() => setItem({ id: item.ItemId, type: type })}
     >
+      {loading && <Spinner />}
       <p>Do you want to delete {item.Title}?</p>
     </Modal>
   );
@@ -49,7 +55,6 @@ const ItemInfoPage = () => {
   const tableType = itemType === "c" ? "chapter" : "episode";
 
   const toggleModal = (action) => {
-    console.log(action)
     if (action === "delete") {
       setDeleteIsOpen((state) => !state);
       setUpdateIsOpen(false);
@@ -89,10 +94,10 @@ const ItemInfoPage = () => {
             bottom: "1%",
           }}
         >
-          <FloatingButton type="edit" callback={() => toggleModal('update')} />
+          <FloatingButton type="edit" callback={() => toggleModal("update")} />
           <FloatingButton
             type="delete"
-            callback={() => toggleModal('delete')}
+            callback={() => toggleModal("delete")}
           />
         </div>
 

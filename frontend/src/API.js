@@ -36,25 +36,20 @@ const apiSettings = {
     });
     return res.data;
   },
-  deleteEntry: async (itemId, type, tableType = "all") => {
-    let res = { status: 404 };
-
-    if (tableType === "all") {
-      res = await axios({
-        method: "DELETE",
-        url: `${process.env.REACT_APP_DOMAIN}${type}/entry?itemId=${itemId}`,
-      });
-    }
+  deleteLibraryItem: async (itemId, itemType) => {
+    const res = await axios({
+      method: "DELETE",
+      url: `${process.env.REACT_APP_DOMAIN}com/entry?itemId=${itemId}&itemType=${itemType}`,
+    });
 
     return res.status;
   },
   updateEntry: async (updData) => {
-    const res = await axios({
+    await axios({
       method: "POST",
       url: `${process.env.REACT_APP_DOMAIN}com/upd`,
       data: updData,
     });
-    console.log(res.data);
   },
   upload: async (type, formData, setProgress) => {
     const res = await axios({

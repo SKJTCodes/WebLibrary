@@ -53,7 +53,6 @@ const SearchPage = () => {
       </div>
       {loading && <Spinner />}
       <Grid>
-        {console.log(state)}
         {state[type].map((item) => (
           <Thumb
             key={item.ItemId}

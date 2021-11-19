@@ -42,7 +42,6 @@ export const useUpdateItem = () => {
       setError(false);
       setLoading(true);
 
-      console.log(dat)
       await API.updateEntry(dat);
     } catch (err) {
       console.error(err);

@@ -2,35 +2,29 @@ import { useState, useEffect } from "react";
 // API
 import API from "../API";
 
-export const useDeleteComic = () => {
-  const [itemId, setItemId] = useState(null);
+export const useDeleteItem = () => {
+  const [item, setItem] = useState({id: null, type: null});
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [done, setDone] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
 
-  const deleteComic = async (itemId) => {
+  const deleteItem = async (item) => {
     try {
       setLoading(true);
       setError(false);
 
-      const statusCode = await API.deleteEntry(itemId, "c", "all");
-      if (statusCode !== 200) {
-        console.error(`Failed to delete Entry: ${itemId}`);
-        setError(true);
-      }
-
-      setLoading(false);
-      setDone(true);
+      await API.deleteLibraryItem(item['id'], item['type']);
+      setIsDeleted(true)
     } catch (err) {
-      console.error(err);
       setError(true);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
-    if (!itemId) return;
-    deleteComic(itemId);
-  }, [itemId]);
+    if (!item['id'] | !item['type']) return;
+    deleteItem(item);
+  }, [item]);
 
-  return { error, loading, done, setItemId };
+  return { error, loading, isDeleted, setItem };
 };

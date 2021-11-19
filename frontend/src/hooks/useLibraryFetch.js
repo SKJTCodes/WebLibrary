@@ -41,7 +41,7 @@ export const useFetchEntry = (itemId, itemType) => {
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState({});
 
-  const fetchComic = async (itemId, itemType) => {
+  const fetchItem = async (itemId, itemType) => {
     try {
       setError(false);
       setLoading(true);
@@ -54,7 +54,6 @@ export const useFetchEntry = (itemId, itemType) => {
       items[key[0]].sort((a, b) => {
         return a[key[1]] - b[key[1]];
       });
-      console.log(items);
       setState(items);
       setLoading(false);
     } catch (err) {
@@ -64,7 +63,7 @@ export const useFetchEntry = (itemId, itemType) => {
   };
 
   useEffect(() => {
-    fetchComic(itemId, itemType);
+    fetchItem(itemId, itemType);
   }, [itemId, itemType]);
 
   return { state, loading, error, setState };
