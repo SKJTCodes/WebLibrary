@@ -1,5 +1,7 @@
 - video player - done
-- Update modal
+- Update modal - done
+- Delete Chapter/Episode
+- Delete Library Item
 - upload comic
 - Delete Chapter, Edit Chapter info
 - EDIT DB INFO

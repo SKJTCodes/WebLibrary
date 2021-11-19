@@ -11,18 +11,35 @@ export const Wrapper = styled.div`
 `;
 
 export const Content = styled.div`
-  display: flex;
   width: 100%;
   max-width: var(--maxWidth);
   padding: 0 20px;
+  white-space: nowrap;
 
-  span {
+  div {
+    display: inline-block;
     font-size: var(--fontMed);
     color: var(--white);
-    padding-right: 10px;
 
-    @media screen and (max-width: 768px) {
+    .sep {
+      padding: 0px 10px 0px 10px;
+    }
+  }
+
+  @media screen and (max-width: 500px) and (min-width: 368px) {
+    div {
       font-size: var(--fontSmall);
+    }
+  }
+
+  @media screen and (max-width: 368px) {
+    div {
+      font-size: var(--fontSmall);
+    }
+    .value, .sep {
+      max-width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 `;

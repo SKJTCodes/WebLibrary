@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 // Hooks
 import { useFetchEntry } from "../hooks/useLibraryFetch";
 import { useUpdateItem } from "../hooks/useUpload";
@@ -8,10 +8,32 @@ import FloatingButton from "./FloatingButton";
 import ModalUpdate from "./ModalUpdate";
 import Spinner from "./Spinner";
 import InfoBar from "./InfoBar";
+import Modal from "./Modal";
 import Thumb from "./Thumb";
 import Grid from "./Grid";
 // Helper
 import Helper from "../Helper";
+
+const ModalDelete = ({ type, item, toggleModal }) => {
+  const nav = useNavigate();
+  const done = false;
+
+  useEffect(() => {
+    if (!done) return;
+    nav("/");
+  }, [done, nav]);
+
+  return (
+    <Modal
+      title={`Delete ${item.Title}`}
+      setOpenModal={() => toggleModal("delete")}
+      cancelButton="No"
+      acceptButton="Yes"
+    >
+      <p>Do you want to delete {item.Title}?</p>
+    </Modal>
+  );
+};
 
 const ItemInfoPage = () => {
   // URL Param
@@ -22,8 +44,20 @@ const ItemInfoPage = () => {
   const { setData, error2, loading2 } = useUpdateItem();
 
   const [updateIsOpen, setUpdateIsOpen] = useState(false);
+  const [deleteIsOpen, setDeleteIsOpen] = useState(false);
 
   const tableType = itemType === "c" ? "chapter" : "episode";
+
+  const toggleModal = (action) => {
+    console.log(action)
+    if (action === "delete") {
+      setDeleteIsOpen((state) => !state);
+      setUpdateIsOpen(false);
+    } else if (action === "update") {
+      setUpdateIsOpen((state) => !state);
+      setDeleteIsOpen(false);
+    }
+  };
 
   if (error | error2) return <div>Encountered an Error ...</div>;
   if (loading | loading2) return <Spinner />;
@@ -33,11 +67,18 @@ const ItemInfoPage = () => {
       <>
         {updateIsOpen && (
           <ModalUpdate
-            toggleModal={setUpdateIsOpen}
+            toggleModal={toggleModal}
             item={state["identity"]}
             type={itemType}
             setInfoBar={setState}
             setData={setData}
+          />
+        )}
+        {deleteIsOpen && (
+          <ModalDelete
+            type={itemType}
+            item={state["identity"]}
+            toggleModal={toggleModal}
           />
         )}
 
@@ -48,7 +89,11 @@ const ItemInfoPage = () => {
             bottom: "1%",
           }}
         >
-          <FloatingButton type="edit" callback={() => setUpdateIsOpen(true)} />
+          <FloatingButton type="edit" callback={() => toggleModal('update')} />
+          <FloatingButton
+            type="delete"
+            callback={() => toggleModal('delete')}
+          />
         </div>
 
         <InfoBar item={state["identity"]} type={tableType} />

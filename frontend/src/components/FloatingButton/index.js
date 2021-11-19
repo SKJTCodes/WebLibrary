@@ -9,7 +9,7 @@ const FloatingButton = ({ callback, type = "edit" }) => {
   return (
     <Wrapper>
       <Fab
-        color={type === "delete" ? "primary" : ""}
+        color={type === "delete" ? "secondary" : ""}
         size="medium"
         onClick={callback}
       >

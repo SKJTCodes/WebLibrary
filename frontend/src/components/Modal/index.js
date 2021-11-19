@@ -25,7 +25,7 @@ const Modal = ({
     <Wrapper id="background" onClick={(e) => handleBackground(e)}>
       <ModalBody>
         <div className="close">
-          <CloseBtn onClick={() => setOpenModal(state => !state)}> X </CloseBtn>
+          <CloseBtn onClick={() => setOpenModal()}> X </CloseBtn>
         </div>
         <Title>{title}</Title>
         <Body>
@@ -37,7 +37,7 @@ const Modal = ({
         </Body>
         <Footer>
           {cancelButton !== "" && (
-            <button onClick={() => setOpenModal(state => !state)}>{cancelButton}</button>
+            <button onClick={() => setOpenModal()}>{cancelButton}</button>
           )}
           {acceptButton !== "" && (
             <button className="accept" onClick={callback}>

@@ -23,7 +23,7 @@ const ModalUpdate = ({ toggleModal, item, type, setInfoBar, setData }) => {
     const updState = { ...state, Genre: genre };
     setData(updState);
     setInfoBar((state) => ({ ...state, identity: updState }));
-    toggleModal((state) => !state);
+    toggleModal('update');
   };
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const ModalUpdate = ({ toggleModal, item, type, setInfoBar, setData }) => {
   return (
     <>
       <Modal
-        setOpenModal={toggleModal}
+        setOpenModal={() => toggleModal("update")}
         cancelButton=""
         acceptButton=""
         title="Edit Item"
