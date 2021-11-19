@@ -30,13 +30,20 @@ export const Content = styled.div`
     div {
       font-size: var(--fontSmall);
     }
+    .value,
+    .sep {
+      max-width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   @media screen and (max-width: 368px) {
     div {
       font-size: var(--fontSmall);
     }
-    .value, .sep {
+    .value,
+    .sep {
       max-width: 100px;
       overflow: hidden;
       text-overflow: ellipsis;
