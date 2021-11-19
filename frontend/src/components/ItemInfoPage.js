@@ -22,8 +22,8 @@ const ModalDelete = ({ type, item, toggleModal }) => {
 
   useEffect(() => {
     if (!isDeleted) return;
-    nav("/");
-  }, [isDeleted, nav]);
+    nav(`/${type}?sort=DateCreated`);
+  }, [isDeleted, type, nav]);
 
   if (error) return <div>Something went wrong ....</div>;
 
