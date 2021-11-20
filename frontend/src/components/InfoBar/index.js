@@ -24,7 +24,7 @@ const InfoBar = ({ item, type }) => {
             <h1>{Helper.titleCase(item.Title)}</h1>
             <h3>DESCRIPTION</h3>
             <p>{item.Description}</p>
-            <h3>{type === "Episode" ? "CREATOR" : "AUTHOR"}</h3>
+            <h3>{type === "episode" ? "CREATOR" : "AUTHOR"}</h3>
             <Link to={`/s?searchText=${item.Maker}`}>
               <span className="author">{Helper.titleCase(item.Maker)}</span>
             </Link>
