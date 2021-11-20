@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { search, updateLib, deleteAll } = require("../services/mysql");
+const { deleteFolder } = require("../services/filesystem");
 const path = require("path");
 
 // Get Search Results
@@ -53,11 +54,28 @@ router.post("/upd", (req, res) => {
     });
 });
 
+const deleteEntry = async (id, type) => {
+  try {
+    const sqlMsg = await deleteAll(id, type);
+    const idPath = path.join(
+      publicPath,
+      `${type === "c" ? "comic" : "video"}/${id}`
+    );
+    const msg = await deleteFolder(idPath);
+    return { sql: sqlMsg, fileman: msg };
+  } catch (err) {
+    throw err;
+  }
+};
+
 /* Delete Entry */
 router.delete("/entry", (req, res) => {
   const { itemId, itemType } = req.query;
-  deleteAll(itemId, itemType)
-    .then((data) => res.send(data))
+  deleteEntry(itemId, itemType)
+    .then((data) => {
+      console.log(data);
+      res.send(data);
+    })
     .catch((err) => {
       console.error(err);
       res.status(404).send(err);

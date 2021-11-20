@@ -1,3 +1,5 @@
+'use strict'
+
 const rimraf = require("rimraf");
 const { promises: Fs } = require("fs");
 
@@ -14,11 +16,9 @@ module.exports.deleteFolder = async (dirPath) => {
   try {
     const exist = await exists(dirPath);
     if (!exist) throw `${dirPath} don't exist.`;
-    
-    rimraf(dirPath, function (err) {
-      if (err) throw err;
-    });
-    return `Deleted ${dirPath}`;
+
+    await Fs.rmdir(dirPath, { recursive: true, force: true });
+    return `DELETED ${dirPath}`;
   } catch (err) {
     throw err;
   }
