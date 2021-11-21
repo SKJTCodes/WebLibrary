@@ -40,31 +40,6 @@ router.get("/entry", function (req, res) {
     });
 });
 
-const delCm = async (itemId) => {
-  const data = await deleteAll(itemId, "COMICS", "COMIC_ITEMS");
-
-  const idPath = path.dirname(data["delEntry"].cover_path);
-  const fullIdPath = path.join(publicPath, idPath);
-  const msg = await deleteFolder(fullIdPath);
-
-  data["fileDelMsg"] = msg;
-  return data;
-};
-
-// Delete COMIC entry
-router.delete("/entry", function (req, res) {
-  const { itemId } = req.query;
-
-  delCm(parseInt(itemId))
-    .then((data) => {
-      res.json(data);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(404).send(err);
-    });
-});
-
 // Get Current/Next/Prev Chapter Page Paths
 router.get("/page", function (req, res) {
   const { itemId, chptNum } = req.query;
@@ -77,16 +52,6 @@ router.get("/page", function (req, res) {
       console.error(err);
       res.status(404).send(err);
     });
-});
-
-// Testing
-router.get("/test", function (req, res) {
-  const { page } = req.query;
-  getPage(parseInt(page), "comics")
-    .then((data) => {
-      res.json(data);
-    })
-    .catch((err) => res.send(err));
 });
 
 module.exports = router;

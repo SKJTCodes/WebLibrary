@@ -73,7 +73,7 @@ export const Btn = styled.button`
   color: var(--white);
   cursor: pointer;
   font-size: var(--fontSmall);
-  margin-top: 10px;
+  margin-top: 15px;
   padding: 15px 30px;
   text-transform: uppercase;
   transition: all 200ms;

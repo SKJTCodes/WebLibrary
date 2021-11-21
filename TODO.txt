@@ -1,8 +1,9 @@
 - video player - done
 - Update modal - done
-- Delete Chapter/Episode
-- Delete Library Item
 - upload comic
+- upload video
+- Delete Chapter/Episode
+- Delete Library Item - done
 - Delete Chapter, Edit Chapter info
 - EDIT DB INFO
 - page navigation (back will bring to the previous page rather than load the previous url)

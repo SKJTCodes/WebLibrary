@@ -1,6 +1,5 @@
 'use strict'
 
-const rimraf = require("rimraf");
 const { promises: Fs } = require("fs");
 
 async function exists(path) {

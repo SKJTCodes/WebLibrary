@@ -9,6 +9,7 @@ import { useUploadComic } from "../hooks/useUpload";
 import Helper from "../Helper";
 // Components
 import Spinner from "./Spinner";
+import FileUploader from "./FileUploader";
 
 const InputTb = ({ label, fields, setFields, addTag }) => (
   <Wrapper>
@@ -44,7 +45,7 @@ const SubmitBtn = ({ text, action }) => (
   </Wrapper>
 );
 
-const UForm = ({ upload, setFields, fields, setFiles }) => {
+const UForm = ({ upload, setFields, fields, setFiles, files }) => {
   const addTag = (item) => {
     if (item !== "")
       setFields((state) => ({ ...state, genre: [...state.genre, item] }));
@@ -87,7 +88,7 @@ const UForm = ({ upload, setFields, fields, setFiles }) => {
         ))}
       </GenreBar>
       {/* Upload Files */}
-      <Wrapper style={{ color: "var(--white)" }}>
+      {/* <Wrapper style={{ color: "var(--white)" }}>
         <div>{"Files"}</div>
         <input
           type="file"
@@ -97,7 +98,11 @@ const UForm = ({ upload, setFields, fields, setFiles }) => {
           }}
           multiple
         />
+      </Wrapper> */}
+      <Wrapper>
+        <FileUploader setFiles={setFiles} files={files}/>
       </Wrapper>
+
       {/* Submit Button */}
       <SubmitBtn text="Upload" action={() => upload()} />
     </div>
@@ -152,6 +157,7 @@ const UploadPage = () => {
           upload={upload}
           setFields={setFields}
           fields={fields}
+          files={files}
           setFiles={setFiles}
         />
         <div>{progress * 100} / 100</div>
