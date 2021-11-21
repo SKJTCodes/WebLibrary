@@ -21,6 +21,10 @@
 /backend/public/*
 !/backend/public/images
 
+/backend/public/tmp/*
+!/backend/public/tmp
+!/backend/public/tmp/robot.txt
+
 # testing
 /frontend/coverage
 
