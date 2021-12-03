@@ -33,9 +33,7 @@ mysql = SQL(e.USER, e.PWD, e.HOST, e.DB)
 
 def main():
     p = ProcessInputs(log, args.output)
-    # TODO: Sort pages strings properly
     lib_df, chapt_df = p.run(args.input)
-    return
     # TODO: Update SQL STRING CoverPath and Page Paths the ITEMID properly
     update_sql(lib_df, chapt_df)
 
