@@ -6,7 +6,7 @@
 /updateComic/log
 /updateComic/2. output/*
 /updateComic/1. input/*
-!/updateComic/1. input/Author+Title
+!/updateComic/1. input/0. Author+Title
 
 # don't ignore database scripts
 /backend/INSERT*.txt
