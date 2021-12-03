@@ -1,5 +1,6 @@
 import mysql.connector as mysql
 
+
 class SQL:
     def __init__(self, user, pwd, host, db):
         c = mysql.connect(user=user, password=pwd, host=host, port=3306, database=db)

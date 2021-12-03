@@ -1,21 +1,26 @@
 import argparse
 import datetime
-import re
-import shutil
 from datetime import datetime
 from pathlib import Path
-from Env import Env as e
+
+from tqdm import tqdm
 
 from AccessSql import SQL
+from Env import Env as e
 from Logger import Logger
+from ProcessInputs import ProcessInputs
 
 parser = argparse.ArgumentParser(description="Add item to Library")
+parser.add_argument('--option',
+                    choices=['delete', 'add'],
+                    default='add',
+                    help="Choose what to do to sql")
 parser.add_argument('--input', type=lambda x: Path(x).absolute(),
                     help="Path to take in Files to be added to library",
                     default="./1. input")
 parser.add_argument('--output', type=lambda x: Path(x).absolute(),
                     help="Path to push out Files to be added to library",
-                    default="./2. output")
+                    default="../backend/public/comic")
 parser.add_argument('--prod', action="store_true", help="If enable, upload to SQL DB")
 args = parser.parse_args()
 
@@ -27,71 +32,28 @@ mysql = SQL(e.USER, e.PWD, e.HOST, e.DB)
 
 
 def main():
-    data = get_info(args.input, args.output)
-    update_sql(data)
+    p = ProcessInputs(log, args.output)
+    # TODO: Sort pages strings properly
+    lib_df, chapt_df = p.run(args.input)
+    return
+    # TODO: Update SQL STRING CoverPath and Page Paths the ITEMID properly
+    update_sql(lib_df, chapt_df)
 
 
-def get_info(root_path, out_root, img_ext=None):
-    if img_ext is None:
-        img_ext = ['.jpg', '.png']
-
-    img_ext = [x if x[0] == "." else f".{x}" for x in img_ext]
-    img_pat = [fr".*\{x}" for x in img_ext]
-    img_pat = "|".join(img_pat)
-
-    item_id = mysql.query("SELECT MAX(ItemId) FROM Library_Items")[0][0] + 1
-
-    data = []
-    for comic in root_path.iterdir():
-        author, title = str(comic.stem).split("+")
-        cover_suffix = None
-
-        chapter_paths = {}
-        for index, cpt in enumerate(comic.iterdir()):
-            chapter = index + 1
-
-            data_img_path = []
-            pages = [x for x in cpt.iterdir() if re.match(img_pat, str(x))]
-            for i_ind, image in enumerate(pages):
-                page = i_ind + 1
-                dst = out_root / str(item_id) / str(chapter) / f"{page}{image.suffix}"
-                data_img_path.append(f"comic/{item_id}/{chapter}/{page}{image.suffix}")
-
-                dst.parents[0].mkdir(parents=True, exist_ok=True)
-                shutil.copy(image, dst)
-                if page == 1:
-                    cover_suffix = image.suffix
-                    shutil.copy(image, dst.parents[1] / f'cover{image.suffix}')
-
-            chapter_paths.update({chapter: data_img_path})
-
-        data.append(dict(ItemId=item_id, cpt_ep=chapter_paths, Title=title, Maker=author, ItemType="img",
-                         DateCreated=datetime.today().strftime('%Y-%m-%d %H:%M:%S'),
-                         CoverPath=f'comic/{item_id}/cover{cover_suffix}',
-                         TotalEntries=len(chapter_paths)))
-
-        item_id += 1
-    return data
-
-
-def update_sql(data):
-    for entry in data:
+def update_sql(lib_df, chapt_df):
+    for i, entry in tqdm(lib_df.iterrows(), total=lib_df.shape[0], desc="Updating Database"):
         update_lib(entry)
-        update_chpt_ep(entry['cpt_ep'], entry['ItemId'])
+        update_chpt_ep(chapt_df.loc[chapt_df['ItemId'] == entry['ItemId']])
 
 
-def update_chpt_ep(data_entry, item_id, insert_type="img"):
-    if insert_type == "img":
-        chpt_id = mysql.query("SELECT MAX(ChptId) FROM Chapters")[0][0] + 1
-    else:
-        chpt_id = None
-
-    for num, data_list in data_entry.items():
+def update_chpt_ep(chapt_df, insert_type="img"):
+    for row in chapt_df.itertuples():
+        date_now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
         if insert_type == 'img':
             q_str = f"""
             INSERT INTO Chapters(ChptId, ChapterNo, TotalPages, DateCreated, ItemId)
             VALUES
-            ({chpt_id}, {num}, {len(data_list)}, '{datetime.today().strftime('%Y-%m-%d %H:%M:%S')}', {item_id})
+            ({row.ChptId}, {row.Chapter}, {len(row.Pages)}, '{date_now}', {row.ItemId})
             """
             if args.prod:
                 mysql.query(q_str)
@@ -99,18 +61,19 @@ def update_chpt_ep(data_entry, item_id, insert_type="img"):
             else:
                 log.info(q_str)
 
-            update_pages(data_list, chpt_id)
-
-            chpt_id += 1
+            update_pages(row.Pages, row.ChptId, row.ItemId)
 
 
-def update_pages(page_list, chpt_id):
-    page_id = mysql.query("SELECT MAX(PageId) FROM Pages")[0][0] + 1
-    for page in page_list:
+def update_pages(page_list, chpt_id, item_id):
+    max_page_id = mysql.query("SELECT MAX(PageId) FROM Pages")[0][0]
+
+    page_id = 1 if max_page_id is None else max_page_id + 1
+
+    for _, page, _ in page_list:
         q_str = f"""
         INSERT INTO Pages(PageId, Path, ChptId)
         VALUES
-        ({page_id}, '{page}', {chpt_id})
+        ({page_id}, '{page.format(item_id=item_id)}', {chpt_id})
         """
 
         if args.prod:
@@ -127,7 +90,11 @@ def update_lib(entry):
     INSERT INTO Library_Items(ItemId, Title, Maker, ItemType, DateCreated, CoverPath, TotalEntries)
     VALUES
     ({entry['ItemId']}, '{entry['Title']}', '{entry['Maker']}', '{entry['ItemType']}', '{entry['DateCreated']}', 
-    '{entry['CoverPath']}', {entry['TotalEntries']})
+    '{entry['CoverPath'].format(item_id=entry['ItemId'])}', {entry['TotalEntries']})
+    """ if not entry['ItemExist'] else f"""
+    UPDATE Library_Items
+    SET DateCreated='{entry['DateCreated']}', TotalEntries={entry['TotalEntries']}
+    WHERE ItemId={entry['ItemId']}
     """
     if args.prod:
         mysql.query(q_str)
