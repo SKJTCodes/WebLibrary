@@ -151,7 +151,7 @@ module.exports.getCurAdjEpisodes = async function (itemId, epNum) {
 
 const getPageQuery = function (itemId, chptNum) {
   return `
-  SELECT Pages.Path
+  SELECT Pages.Path, Pages.ImgType
   FROM Chapters INNER JOIN Pages
   ON Pages.ChptId=Chapters.ChptId
   WHERE Chapters.ItemId=${itemId}
@@ -168,15 +168,15 @@ module.exports.getCurAdjChptPages = async function (itemId, chptNum) {
       `SELECT * FROM Library_Items WHERE ItemId=${itemId}`
     );
 
-    let page_paths = cur_data.map((p) => p.Path);
+    let page_paths = cur_data.map((p) => ({path: p.Path, type: p.ImgType}));
     // Sort Paths according to page number
     page_paths = page_paths.sort(
       (a, b) =>
         parseInt(
-          a.split("/")[a.split("/").length - 1].replace(/[.][a-z]{1,3}/i, "")
+          a.path.split("/")[a.path.split("/").length - 1].replace(/[.][a-z]{1,3}/i, "")
         ) -
         parseInt(
-          b.split("/")[b.split("/").length - 1].replace(/[.][a-z]{1,3}/i, "")
+          b.path.split("/")[b.path.split("/").length - 1].replace(/[.][a-z]{1,3}/i, "")
         )
     );
 
