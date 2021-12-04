@@ -28,7 +28,7 @@ const InfoBar = ({ item, type }) => {
             <Link to={`/s?searchText=${item.Maker}`}>
               <span className="author">{Helper.titleCase(item.Maker)}</span>
             </Link>
-            <h3>GENRE</h3>
+            <h3>TAG</h3>
             {item.Genre.map((genre) => (
               <Link key={genre} to={`/s?searchText=${genre}`}>
                 <Pill>{`${genre}`}</Pill>
