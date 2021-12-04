@@ -13,7 +13,7 @@ const SearchBar = ({ searchText, setSearchText }) => {
           onChange={(event) => setSearchText(event.currentTarget.value)}
           value={searchText}
           type="text"
-          placeholder="Search Movie"
+          placeholder="Search Media"
         />
       </Content>
     </Wrapper>
