@@ -64,7 +64,7 @@ const Pages = ({ itemId, chptNum, nav }) => {
 
   if (error) return <div>Encountered an Error ...</div>;
   if (loading) return <Spinner />;
-
+  console.log(state)
   const breadcrumb =
     Object.keys(state.item).length === 0
       ? []

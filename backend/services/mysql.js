@@ -182,7 +182,7 @@ module.exports.getCurAdjChptPages = async function (itemId, chptNum) {
 
     // Add Chapter Number to item info
     const item = item_info[0];
-    item["ChapterNum"] = parseInt(chptNum);
+    item["ChapterNum"] = parseFloat(chptNum);
 
     const entry = {
       item: item,
@@ -198,7 +198,7 @@ module.exports.getCurAdjChptPages = async function (itemId, chptNum) {
       entry["PrevChaptNum"] = -1;
     } else {
       const cur_index = chpt_list.findIndex(
-        (x) => x.ChapterNo === parseInt(chptNum)
+        (x) => parseFloat(x.ChapterNo) === parseFloat(chptNum)
       );
       entry["PrevChaptNum"] =
         cur_index === 0 ? -1 : chpt_list[cur_index - 1].ChapterNo;

@@ -1,5 +1,6 @@
 - video player - done
 - Update modal - done
+- Comic If chapter is decimal number, cannot move to next chapter - done
 - upload comic
 - upload video
 - Delete Chapter/Episode
