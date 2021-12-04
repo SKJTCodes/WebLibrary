@@ -51,6 +51,7 @@ CREATE TABLE Pages(
 PageId INT NOT NULL,
 Path VARCHAR(255) NOT NULL,
 ChptId INT,
+ImgType ENUM('portrait', 'landscape') NOT NULL DEFAULT 'portrait',
 PRIMARY KEY (PageId),
 FOREIGN KEY (ChptId) REFERENCES Chapters(ChptId)
 );

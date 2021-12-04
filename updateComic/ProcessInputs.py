@@ -3,6 +3,7 @@ import shutil
 from datetime import datetime
 from pathlib import Path
 import helper as h
+from PIL import Image
 
 import pandas as pd
 from tqdm import tqdm
@@ -69,17 +70,10 @@ class ProcessInputs:
                 else:  # if is float
                     chapter = float(float_match.group(1))
 
-                data_img_path = []
                 pages = [str(x) for x in cpt.iterdir() if re.match(img_pat, str(x))]
-                pages = [Path(x) for x in h.sort_num_string(pages)]
-                for i_ind, image in enumerate(pages):
-                    page = i_ind + 1
-                    data_img_path.append((image, "comic/" + "{item_id}" + f"/{chapter}/{page}{image.suffix}", page))
+                data_img_paths, cover_suffix = self._get_page_info(pages, chapter, cover_suffix)
 
-                    if page == 1:
-                        cover_suffix = image.suffix
-
-                chapter_paths.update({chapter: data_img_path})
+                chapter_paths.update({chapter: data_img_paths})
 
             title = title.replace("'", "''").lower()
             maker = author.replace("'", "''").lower()
@@ -91,6 +85,30 @@ class ProcessInputs:
 
         df = pd.DataFrame(data)
         return df
+
+    @staticmethod
+    def _get_page_info(pages, chapter, cover_suffix):
+        pages = [Path(x) for x in h.sort_num_string(pages)]
+        data_img_path = []
+
+        for i_ind, image in enumerate(pages):
+            page = i_ind + 1
+
+            with Image.open(image) as im:
+                width, height = im.size
+
+            data_img_path.append(
+                (image,  # page src path
+                 "comic/" + "{item_id}" + f"/{chapter}/{page}{image.suffix}",  # db path
+                 page,  # page number
+                 "landscape" if width > height else "portrait"  # Landscape or portrait
+                 )
+            )
+
+            if page == 1:
+                cover_suffix = image.suffix
+
+        return data_img_path, cover_suffix
 
     def _copy_files(self, c_df, type_paths=None):
         """
@@ -107,7 +125,7 @@ class ProcessInputs:
             if row.AlreadyExist:
                 continue
 
-            for src_path, dst_path, page_num in row.Pages:
+            for src_path, dst_path, page_num, _ in row.Pages:
                 path = dst_path.replace(type_paths[0], "").replace(type_paths[1], "")
                 dst = self.out / path.format(item_id=row.ItemId)
                 dst.parents[0].mkdir(parents=True, exist_ok=True)

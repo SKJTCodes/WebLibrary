@@ -67,11 +67,11 @@ def update_pages(page_list, chpt_id, item_id):
 
     page_id = 1 if max_page_id is None else max_page_id + 1
 
-    for _, page, _ in page_list:
+    for _, page, _, img_type in page_list:
         q_str = f"""
-        INSERT INTO Pages(PageId, Path, ChptId)
+        INSERT INTO Pages(PageId, Path, ChptId, ImgType)
         VALUES
-        ({page_id}, '{page.format(item_id=item_id)}', {chpt_id})
+        ({page_id}, '{page.format(item_id=item_id)}', {chpt_id}, '{img_type}')
         """
 
         if args.prod:
