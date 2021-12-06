@@ -4,6 +4,7 @@
 /updateComic/.idea
 /updateComic/__pycache__
 /updateComic/log
+/updateComic/Env.py
 /updateComic/2. output/*
 /updateComic/1. input/*
 !/updateComic/1. input/0. Author+Title
