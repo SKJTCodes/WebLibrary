@@ -10,18 +10,19 @@ export const Textbox = ({ label, setValue, value }) => (
           type="text"
           required
           value={value}
+          autoComplete="off"
           onChange={(e) => {
             setValue(e.target.value);
           }}
         />
       )}
-      {!setValue && <input type="text" required />}
+      {!setValue && <input type="text" required autoComplete="off" />}
       <div className="label-text">{label}</div>
     </Label>
   </Wrapper>
 );
 
-export const Button = ({ text, action=() => {} }) => (
+export const Button = ({ text, action = () => {} }) => (
   <Wrapper>
     <Btn onClick={() => action()} type="submit">
       {text}

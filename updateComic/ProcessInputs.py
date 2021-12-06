@@ -35,7 +35,7 @@ class ProcessInputs:
 
     def _process_img(self, path, img_ext=None):
         if img_ext is None:
-            img_ext = ['.jpg', '.png']
+            img_ext = ['.jpg', '.png', '.jpeg']
 
         img_ext = [x if x[0] == "." else f".{x}" for x in img_ext]
         img_pat = [fr".*\{x}" for x in img_ext]

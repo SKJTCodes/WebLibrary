@@ -23,7 +23,7 @@ const ModalUpdate = ({ toggleModal, item, type, setInfoBar, setData }) => {
     const updState = { ...state, Genre: genre };
     setData(updState);
     setInfoBar((state) => ({ ...state, identity: updState }));
-    toggleModal('update');
+    toggleModal("update");
   };
 
   useEffect(() => {
@@ -47,6 +47,7 @@ const ModalUpdate = ({ toggleModal, item, type, setInfoBar, setData }) => {
             <input
               type="text"
               required
+              autoComplete="off"
               value={state.Title}
               onChange={(e) =>
                 setState((state) => ({ ...state, Title: e.target.value }))
@@ -62,6 +63,7 @@ const ModalUpdate = ({ toggleModal, item, type, setInfoBar, setData }) => {
               type="text"
               required
               value={state.Maker}
+              autoComplete="off"
               onChange={(e) =>
                 setState((state) => ({ ...state, Maker: e.target.value }))
               }
@@ -74,7 +76,7 @@ const ModalUpdate = ({ toggleModal, item, type, setInfoBar, setData }) => {
         {/* Genre Textbox */}
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Label>
-            <input type="text" required id="genre" />
+            <input type="text" required id="genre" autoComplete="off" />
             <div className="label-text">Genre</div>
           </Label>
           <SubBtn
