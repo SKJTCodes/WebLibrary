@@ -3,11 +3,12 @@ import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 // Components
 import Grid from "./Grid";
 import Thumb from "./Thumb";
+import Badge from "./Badges";
 import Button from "./Button";
 import Spinner from "./Spinner";
 import SearchBar from "./SearchBar";
 // Hooks
-import { useSearch } from "../hooks/useSearch";
+import { useSearch, useTags } from "../hooks/useSearch";
 // Helper
 import Helper from "../Helper";
 
@@ -22,6 +23,7 @@ const SearchPage = () => {
   const { state, loading, error, text, setText } = useSearch(
     params.getAll("searchText")
   );
+  const { state: tags, loading: loading2, error: error2 } = useTags();
 
   useEffect(() => {
     if (state[TYPES[0]].length < state[TYPES[1]].length) {
@@ -31,7 +33,7 @@ const SearchPage = () => {
     }
   }, [state]);
 
-  if (error) return <div>Something went wrong ....</div>;
+  if (error | error2) return <div>Something went wrong ....</div>;
 
   const handleNavigate = (to) => {
     const urlSearchText = Helper.appendSearchString(
@@ -46,12 +48,22 @@ const SearchPage = () => {
   return (
     <>
       <SearchBar searchText={text} setSearchText={setText} />
-      <div style={{ margin: "20px" }}></div>
+      {/* Display Tags */}
+      <div className="container" style={{ paddingTop: "20px" }}>
+        {tags.map((tag) => (
+          <Badge
+            key={tag.Text}
+            text={tag.Text}
+            num={tag.Num}
+            cb={() => setText(tag.Text)}
+          />
+        ))}
+      </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Button text={"Comics"} callback={() => setType("img")} />
         <Button text={"Videos"} callback={() => setType("vid")} />
       </div>
-      {loading && <Spinner />}
+      {loading | loading2 ? <Spinner /> : null}
       <Grid>
         {state[type].map((item) => (
           <Thumb

@@ -36,6 +36,13 @@ const apiSettings = {
     });
     return res.data;
   },
+  fetchTags: async () => {
+    const res = await axios({
+      method: "GET",
+      url: `${process.env.REACT_APP_DOMAIN}com/tags`,
+    });
+    return res.data;
+  },
   deleteLibraryItem: async (itemId, itemType) => {
     const res = await axios({
       method: "DELETE",

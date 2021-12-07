@@ -168,15 +168,19 @@ module.exports.getCurAdjChptPages = async function (itemId, chptNum) {
       `SELECT * FROM Library_Items WHERE ItemId=${itemId}`
     );
 
-    let page_paths = cur_data.map((p) => ({path: p.Path, type: p.ImgType}));
+    let page_paths = cur_data.map((p) => ({ path: p.Path, type: p.ImgType }));
     // Sort Paths according to page number
     page_paths = page_paths.sort(
       (a, b) =>
         parseInt(
-          a.path.split("/")[a.path.split("/").length - 1].replace(/[.][a-z]{1,3}/i, "")
+          a.path
+            .split("/")
+            [a.path.split("/").length - 1].replace(/[.][a-z]{1,3}/i, "")
         ) -
         parseInt(
-          b.path.split("/")[b.path.split("/").length - 1].replace(/[.][a-z]{1,3}/i, "")
+          b.path
+            .split("/")
+            [b.path.split("/").length - 1].replace(/[.][a-z]{1,3}/i, "")
         )
     );
 
@@ -357,6 +361,18 @@ module.exports.deleteAll = async function (itemId, itemType) {
     await getQuery(`DELETE FROM Library_Items WHERE ItemId=${itemId}`);
 
     return `Successfully deleted all ID:${itemId}`;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// Get All tags and number of entries using the tag
+module.exports.getTags = async function () {
+  try {
+    const data = await getQuery(
+      `SELECT Text, COUNT(*) as Num FROM Genres GROUP BY Text ORDER BY Text;`
+    );
+    return data;
   } catch (err) {
     throw err;
   }

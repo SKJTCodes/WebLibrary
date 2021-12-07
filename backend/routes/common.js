@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { search, updateLib, deleteAll } = require("../services/mysql");
+const { search, updateLib, deleteAll, getTags } = require("../services/mysql");
 const { deleteFolder } = require("../services/filesystem");
 const path = require("path");
 
@@ -75,6 +75,18 @@ router.delete("/entry", (req, res) => {
     .then((data) => {
       console.log(data);
       res.send(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(404).send(err);
+    });
+});
+
+/* Get All Tags and the number of entries with said Tags */
+router.get("/tags", (req, res) => {
+  getTags()
+    .then((data) => {
+      res.json(data);
     })
     .catch((err) => {
       console.error(err);
