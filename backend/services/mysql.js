@@ -168,15 +168,19 @@ module.exports.getCurAdjChptPages = async function (itemId, chptNum) {
       `SELECT * FROM Library_Items WHERE ItemId=${itemId}`
     );
 
-    let page_paths = cur_data.map((p) => ({path: p.Path, type: p.ImgType}));
+    let page_paths = cur_data.map((p) => ({ path: p.Path, type: p.ImgType }));
     // Sort Paths according to page number
     page_paths = page_paths.sort(
       (a, b) =>
         parseInt(
-          a.path.split("/")[a.path.split("/").length - 1].replace(/[.][a-z]{1,3}/i, "")
+          a.path
+            .split("/")
+            [a.path.split("/").length - 1].replace(/[.][a-z]{1,3}/i, "")
         ) -
         parseInt(
-          b.path.split("/")[b.path.split("/").length - 1].replace(/[.][a-z]{1,3}/i, "")
+          b.path
+            .split("/")
+            [b.path.split("/").length - 1].replace(/[.][a-z]{1,3}/i, "")
         )
     );
 
@@ -215,31 +219,40 @@ module.exports.getCurAdjChptPages = async function (itemId, chptNum) {
 };
 
 // Search Table
-module.exports.search = async function (searchText) {
+module.exports.search = async function (searchText, page, nPerPage = 20) {
   try {
+    const offset = nPerPage * (page - 1);
+
+    const query = `
+    SELECT l.ItemId, l.Title, l.ItemType, l.CoverPath
+    FROM Library_Items AS l
+    INNER JOIN Genres AS g
+    WHERE l.ItemId=g.ItemId
+    AND (
+      MATCH(l.Title,l.Maker,l.Description) 
+      AGAINST ('"${searchText}"' IN BOOLEAN MODE)
+      OR MATCH(g.Text)
+      AGAINST ('"${searchText}"' IN BOOLEAN MODE)
+    )
+    GROUP BY l.ItemId
+    ORDER BY l.ItemId DESC `;
+
     const searchLibItems = await getQuery(
-      `SELECT ItemId, Title, ItemType, CoverPath
-      FROM Library_Items 
-      WHERE MATCH (Title,Maker,Description) 
-      AGAINST ('"${searchText}"' IN BOOLEAN MODE)`
+      query + `LIMIT ${offset},${nPerPage}`
     );
+    console.log(searchLibItems);
+    console.log(query)
+    const total = await getQuery(`SELECT COUNT(*) FROM (` + query + ") as t");
 
-    const searchGenre = await getQuery(
-      `SELECT l.ItemId, l.Title, l.ItemType, CoverPath 
-      FROM Genres AS g 
-      INNER JOIN Library_Items AS l
-      WHERE g.ItemId=l.ItemId
-      AND MATCH (g.Text)
-      AGAINST ('"${searchText}"' IN BOOLEAN MODE)`
-    );
+    const TotalPage = Math.ceil(total[0]["COUNT(*)"] / nPerPage);
 
-    const data = [...searchLibItems, ...searchGenre];
     const results = {
       img: helper.getDistinctObjArr(
-        data.filter((item) => item.ItemType === "img"),
+        searchLibItems.filter((item) => item.ItemType === "img"),
         "ItemId"
       ),
-      vid: data.filter((item) => item.ItemType === "vid"),
+      vid: searchLibItems.filter((item) => item.ItemType === "vid"),
+      total_pages: TotalPage ? TotalPage : 1,
     };
 
     return results;
@@ -357,6 +370,18 @@ module.exports.deleteAll = async function (itemId, itemType) {
     await getQuery(`DELETE FROM Library_Items WHERE ItemId=${itemId}`);
 
     return `Successfully deleted all ID:${itemId}`;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// Get All tags and number of entries using the tag
+module.exports.getTags = async function () {
+  try {
+    const data = await getQuery(
+      `SELECT Text, COUNT(*) as Num FROM Genres GROUP BY Text ORDER BY Text;`
+    );
+    return data;
   } catch (err) {
     throw err;
   }

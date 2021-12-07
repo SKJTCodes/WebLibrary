@@ -1,14 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const { search, updateLib, deleteAll } = require("../services/mysql");
+const { search, updateLib, deleteAll, getTags } = require("../services/mysql");
 const { deleteFolder } = require("../services/filesystem");
 const path = require("path");
 
 // Get Search Results
 router.get("/search", function (req, res) {
-  const { text } = req.query;
+  let { text, page, num } = req.query;
 
-  search(text)
+  if (!num) {
+    num = 20;
+  }
+
+  search(text, page, num)
     .then((data) => {
       res.json(data);
     })
@@ -40,7 +44,6 @@ router.post("/upd", (req, res) => {
     // if is Date
     else if (keys[i].toLowerCase().includes("date"));
     else
-      // data[keys[i]] = new Date(req.body[keys[i]]);
       data[keys[i]] = req.body[keys[i]].toLowerCase().trim();
     i++;
   }
@@ -75,6 +78,18 @@ router.delete("/entry", (req, res) => {
     .then((data) => {
       console.log(data);
       res.send(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(404).send(err);
+    });
+});
+
+/* Get All Tags and the number of entries with said Tags */
+router.get("/tags", (req, res) => {
+  getTags()
+    .then((data) => {
+      res.json(data);
     })
     .catch((err) => {
       console.error(err);

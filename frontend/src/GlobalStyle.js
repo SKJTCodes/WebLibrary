@@ -7,6 +7,9 @@ export const GlobalStyle = createGlobalStyle`
     --lightGrey: #838383;
     --medGrey: #353535;
     --darkGrey: #1c1c1c;
+    --lightBlue: #C1C9E1;
+    --medBlue: #6577B3;
+    --darkBlue: #333c5a;
     --fontSuperBig: 2.5rem;
     --fontBig: 1.5rem;
     --fontMed: 1.2rem;

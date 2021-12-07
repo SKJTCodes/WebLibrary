@@ -29,10 +29,17 @@ const apiSettings = {
     });
     return res.data;
   },
-  fetchSearch: async (searchText) => {
+  fetchSearch: async (searchText, page) => {
     const res = await axios({
       method: "GET",
-      url: `${process.env.REACT_APP_DOMAIN}com/search?text=${searchText}`,
+      url: `${process.env.REACT_APP_DOMAIN}com/search?page=${page}&text=${searchText}`,
+    });
+    return res.data;
+  },
+  fetchTags: async () => {
+    const res = await axios({
+      method: "GET",
+      url: `${process.env.REACT_APP_DOMAIN}com/tags`,
     });
     return res.data;
   },

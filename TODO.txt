@@ -1,10 +1,11 @@
-- video player - done
-- Update modal - done
-- Delete Library Item - done
-- Comic If chapter is decimal number, cannot move to next chapter - done
+X video player - done
+X Update modal - done
+X Delete Library Item - done
+X Comic If chapter is decimal number, cannot move to next chapter - done
+X search page, add tag list for search - done
 - when deleting item go back to previous link not back to main page
+- pagination to Search Page
 - page title change according to navigation
-- search page, add tag list for search
 - upload comic
 - upload video
 - Delete Chapter/Episode
