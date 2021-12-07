@@ -219,31 +219,40 @@ module.exports.getCurAdjChptPages = async function (itemId, chptNum) {
 };
 
 // Search Table
-module.exports.search = async function (searchText) {
+module.exports.search = async function (searchText, page, nPerPage = 20) {
   try {
+    const offset = nPerPage * (page - 1);
+
+    const query = `
+    SELECT l.ItemId, l.Title, l.ItemType, l.CoverPath
+    FROM Library_Items AS l
+    INNER JOIN Genres AS g
+    WHERE l.ItemId=g.ItemId
+    AND (
+      MATCH(l.Title,l.Maker,l.Description) 
+      AGAINST ('"${searchText}"' IN BOOLEAN MODE)
+      OR MATCH(g.Text)
+      AGAINST ('"${searchText}"' IN BOOLEAN MODE)
+    )
+    GROUP BY l.ItemId
+    ORDER BY l.ItemId DESC `;
+
     const searchLibItems = await getQuery(
-      `SELECT ItemId, Title, ItemType, CoverPath
-      FROM Library_Items 
-      WHERE MATCH (Title,Maker,Description) 
-      AGAINST ('"${searchText}"' IN BOOLEAN MODE)`
+      query + `LIMIT ${offset},${nPerPage}`
     );
+    console.log(searchLibItems);
+    console.log(query)
+    const total = await getQuery(`SELECT COUNT(*) FROM (` + query + ") as t");
 
-    const searchGenre = await getQuery(
-      `SELECT l.ItemId, l.Title, l.ItemType, CoverPath 
-      FROM Genres AS g 
-      INNER JOIN Library_Items AS l
-      WHERE g.ItemId=l.ItemId
-      AND MATCH (g.Text)
-      AGAINST ('"${searchText}"' IN BOOLEAN MODE)`
-    );
+    const TotalPage = Math.ceil(total[0]["COUNT(*)"] / nPerPage);
 
-    const data = [...searchLibItems, ...searchGenre];
     const results = {
       img: helper.getDistinctObjArr(
-        data.filter((item) => item.ItemType === "img"),
+        searchLibItems.filter((item) => item.ItemType === "img"),
         "ItemId"
       ),
-      vid: data.filter((item) => item.ItemType === "vid"),
+      vid: searchLibItems.filter((item) => item.ItemType === "vid"),
+      total_pages: TotalPage ? TotalPage : 1,
     };
 
     return results;

@@ -6,9 +6,13 @@ const path = require("path");
 
 // Get Search Results
 router.get("/search", function (req, res) {
-  const { text } = req.query;
+  let { text, page, num } = req.query;
 
-  search(text)
+  if (!num) {
+    num = 20;
+  }
+
+  search(text, page, num)
     .then((data) => {
       res.json(data);
     })
@@ -40,7 +44,6 @@ router.post("/upd", (req, res) => {
     // if is Date
     else if (keys[i].toLowerCase().includes("date"));
     else
-      // data[keys[i]] = new Date(req.body[keys[i]]);
       data[keys[i]] = req.body[keys[i]].toLowerCase().trim();
     i++;
   }

@@ -3,18 +3,20 @@ import { useState, useEffect } from "react";
 import API from "../API";
 
 export const useSearch = (searchText) => {
+  const [pageNum, setPageNum] = useState(1);
   const [text, setText] = useState(searchText);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [state, setState] = useState({ img: [], vid: [] });
 
-  const getSearchResults = async (text) => {
+  const getSearchResults = async (text, page) => {
     try {
       setLoading(true);
       setError(false);
-
-      const data = await API.fetchSearch(text, "c");
-      setState(data);
+      if (text !== "") {
+        const data = await API.fetchSearch(text, page);
+        setState(data);
+      }
     } catch (err) {
       console.error(err);
       setError(true);
@@ -23,10 +25,10 @@ export const useSearch = (searchText) => {
   };
 
   useEffect(() => {
-    getSearchResults(text);
-  }, [text]);
+    getSearchResults(text, pageNum);
+  }, [text, pageNum]);
 
-  return { state, text, loading, error, setText };
+  return { state, text, loading, error, pageNum, setText, setPageNum };
 };
 
 export const useTags = () => {
@@ -39,9 +41,8 @@ export const useTags = () => {
       setLoading(true);
       setError(false);
 
-      const data = await API.fetchTags()
-      setState(data)
-
+      const data = await API.fetchTags();
+      setState(data);
     } catch (err) {
       console.error(err);
       setError(true);
@@ -51,8 +52,8 @@ export const useTags = () => {
 
   // Loads once on refresh
   useEffect(() => {
-    getTags()
-  }, [])
+    getTags();
+  }, []);
 
   return { loading, error, state };
 };

@@ -7,6 +7,7 @@ import Badge from "./Badges";
 import Button from "./Button";
 import Spinner from "./Spinner";
 import SearchBar from "./SearchBar";
+import Pagination from "./Pagination";
 // Hooks
 import { useSearch, useTags } from "../hooks/useSearch";
 // Helper
@@ -20,9 +21,8 @@ const SearchPage = () => {
   const location = useLocation();
   const [type, setType] = useState(TYPES[0]);
 
-  const { state, loading, error, text, setText } = useSearch(
-    params.getAll("searchText")
-  );
+  const { state, loading, error, text, pageNum, setText, setPageNum } =
+    useSearch(params.getAll("searchText"));
   const { state: tags, loading: loading2, error: error2 } = useTags();
 
   useEffect(() => {
@@ -77,6 +77,18 @@ const SearchPage = () => {
           />
         ))}
       </Grid>
+
+      {(state[type].length > 0) & (state["total_pages"] > 1) ? (
+        <Pagination
+          curPage={pageNum}
+          totalPages={state["total_pages"]}
+          itemType={type}
+          total={window.innerWidth < 500 ? (window.innerWidth ? 3 : 5) : 9}
+          cb={(pg) => {
+            setPageNum(pg);
+          }}
+        />
+      ) : null}
     </>
   );
 };
