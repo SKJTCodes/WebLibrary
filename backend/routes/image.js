@@ -1,14 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const {
-  search,
   getGenre,
   getPage,
   getInfoAll,
   getCurAdjChptPages,
 } = require("../services/mysql");
-const { deleteFolder } = require("../services/filesystem");
-const path = require("path");
 
 /* GET Library data, Page by Page */
 router.get("/l", function (req, res) {
