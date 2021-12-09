@@ -11,7 +11,7 @@ import Pagination from "./Pagination";
 // Hooks
 import { useSearch, useTags } from "../hooks/useSearch";
 // Helper
-import Helper from "../Helper";
+import helper from "../Helper";
 
 const TYPES = ["img", "vid"];
 
@@ -31,12 +31,15 @@ const SearchPage = () => {
     } else {
       setType(TYPES[0]);
     }
-  }, [state]);
+
+    if (params.getAll("page")[0]) setPageNum(params.getAll("page")[0]);
+    if (params.getAll("searchText")[0]) setText(params.getAll("searchText")[0]);
+  }, [state, params, setText, setPageNum]);
 
   if (error | error2) return <div>Something went wrong ....</div>;
 
   const handleNavigate = (to) => {
-    const urlSearchText = Helper.appendSearchString(
+    const urlSearchText = helper.appendSearchString(
       "searchText",
       text,
       location.search
@@ -55,15 +58,27 @@ const SearchPage = () => {
             key={tag.Text}
             text={tag.Text}
             num={tag.Num}
-            cb={() => setText(tag.Text)}
+            cb={() => {
+              const url = helper.appendSearchString(
+                "searchText",
+                tag.Text,
+                location.search
+              );
+              navigate(url);
+            }}
           />
         ))}
       </div>
+
+      {/* Video/Comic Buttons */}
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Button text={"Comics"} callback={() => setType("img")} />
         <Button text={"Videos"} callback={() => setType("vid")} />
       </div>
+
       {loading | loading2 ? <Spinner /> : null}
+
+      {/* Items */}
       <Grid>
         {state[type].map((item) => (
           <Thumb
@@ -71,7 +86,7 @@ const SearchPage = () => {
             itemId={item.ItemId}
             type={type === TYPES[0] ? "c" : "v"}
             image={`${process.env.REACT_APP_DOMAIN}${item.CoverPath}`}
-            title={Helper.titleCase(item.Title)}
+            title={helper.titleCase(item.Title)}
             clickable
             cb={handleNavigate}
           />
@@ -82,11 +97,7 @@ const SearchPage = () => {
         <Pagination
           curPage={pageNum}
           totalPages={state["total_pages"]}
-          itemType={type}
           total={window.innerWidth < 500 ? (window.innerWidth ? 3 : 5) : 9}
-          cb={(pg) => {
-            setPageNum(pg);
-          }}
         />
       ) : null}
     </>

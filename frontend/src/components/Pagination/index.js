@@ -5,7 +5,7 @@ import { Wrapper, Content } from "./Pagination.styles";
 // Helper
 import Helper from "../../Helper";
 
-const Pagination = ({ curPage, totalPages, total, itemType, cb }) => {
+const Pagination = ({ curPage, totalPages, total }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -37,11 +37,7 @@ const Pagination = ({ curPage, totalPages, total, itemType, cb }) => {
       pageNum,
       location.search
     );
-    if ((itemType === "c") | (itemType === "v"))
-      navigate(`/${itemType}${searchString}`);
-    else {
-      cb(pageNum);
-    }
+    navigate(searchString);
   };
 
   return (
@@ -53,7 +49,7 @@ const Pagination = ({ curPage, totalPages, total, itemType, cb }) => {
             <div
               key={pageNum}
               onClick={() => navigatePage(pageNum)}
-              className={pageNum === curPage ? "active" : ""}
+              className={pageNum === parseInt(curPage) ? "active" : ""}
             >
               {pageNum}
             </div>

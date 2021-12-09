@@ -11,10 +11,10 @@ router.get("/search", function (req, res) {
   if (!num) {
     num = 20;
   }
-
+  console.log(page)
   search(text, page, num)
     .then((data) => {
-      res.json(data);
+      res.json({...data, page: page});
     })
     .catch((err) => {
       console.error(err);
