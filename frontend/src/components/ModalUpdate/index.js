@@ -80,7 +80,11 @@ const ModalUpdate = ({ toggleModal, item, type, setInfoBar, setData }) => {
             <div className="label-text">Genre</div>
           </Label>
           <SubBtn
-            onClick={() => addTag(document.getElementById("genre").value)}
+            onClick={() => {
+              const value = document.getElementById("genre").value
+              if (value.length > 2) addTag(value)
+              else console.log("Please insert more than 2 characters.")
+            }}
           >
             <KeyboardArrowRightRoundedIcon fontSize="large" />
           </SubBtn>
