@@ -51,3 +51,4 @@
 /frontend/yarn-debug.log*
 /frontend/yarn-error.log*
 updateComic/Env.py
+updateComic/.run.sh.swp
