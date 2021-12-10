@@ -1,0 +1,5 @@
+# create aliases
+nano ~/.bash_aliases
+
+# Create SAMBA Server
+https://pimylifeup.com/raspberry-pi-samba/

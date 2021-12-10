@@ -15,15 +15,15 @@ import Grid from "./Grid";
 // Helper
 import Helper from "../Helper";
 
-const ModalDelete = ({ type, item, toggleModal }) => {
+const ModalDelete = ({ type, item, toggleModal, pageHist, sortHist }) => {
   const { error, loading, isDeleted, setItem } = useDeleteItem();
 
   const nav = useNavigate();
 
   useEffect(() => {
     if (!isDeleted) return;
-    nav(`/${type}?sort=DateCreated`);
-  }, [isDeleted, type, nav]);
+    nav(`/`);
+  }, [isDeleted, type, pageHist, sortHist, nav]);
 
   if (error) return <div>Something went wrong ....</div>;
 
@@ -43,7 +43,7 @@ const ModalDelete = ({ type, item, toggleModal }) => {
 
 const ItemInfoPage = () => {
   // URL Param
-  const { itemType, itemId } = useParams();
+  const { itemType, itemId, pageHist, sortHist } = useParams();
   // Get Chapter/ Item Info from Server
   const { state, loading, error, setState } = useFetchEntry(itemId, itemType);
   // For Update entry info
@@ -82,6 +82,8 @@ const ItemInfoPage = () => {
         {deleteIsOpen && (
           <ModalDelete
             type={itemType}
+            pageHist={pageHist}
+            sortHist={sortHist}
             item={state["identity"]}
             toggleModal={toggleModal}
           />
@@ -104,7 +106,7 @@ const ItemInfoPage = () => {
         <InfoBar item={state["identity"]} type={tableType} />
 
         <div style={{ margin: "20px" }}></div>
-
+        {console.log(pageHist, sortHist)}
         <Grid header={`${Helper.titleCase(tableType)}s`}>
           {state[`${tableType}s`].map((item) => (
             <Thumb
@@ -120,6 +122,8 @@ const ItemInfoPage = () => {
               title={`${Helper.titleCase(tableType)} ${
                 item[`${Helper.titleCase(tableType)}No`]
               }`}
+              pageHist={pageHist}
+              sortHist={sortHist}
               type={itemType}
               clickable
               disable

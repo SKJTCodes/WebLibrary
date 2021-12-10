@@ -71,6 +71,8 @@ const OpeningPage = () => {
               type={itemType}
               image={`${process.env.REACT_APP_DOMAIN}${item.CoverPath}`}
               title={Helper.titleCase(item.Title)}
+              pageHist={state.page}
+              sortHist={params.getAll("sort")[0]}
               clickable
             />
           );

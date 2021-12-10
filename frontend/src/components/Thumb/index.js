@@ -4,7 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { Image, Wrapper } from "./Thumb.styles";
 
 const Link = ({ children, to, cb }) => (
-  <span onClick={() => cb(to)} style={{color: "var(--white)", cursor: "pointer"}}>
+  <span
+    onClick={() => cb(to)}
+    style={{ color: "var(--white)", cursor: "pointer" }}
+  >
     {children}
   </span>
 );
@@ -16,6 +19,8 @@ const Thumb = ({
   title,
   type,
   disable,
+  pageHist = null,
+  sortHist = null,
   cb = null,
 }) => {
   const nav = useNavigate();
@@ -29,7 +34,14 @@ const Thumb = ({
   return (
     <Wrapper className={disable ? "disable" : ""}>
       {clickable ? (
-        <Link to={`/${type}/${itemId}`} cb={cb}>
+        <Link
+          to={
+            pageHist !== null & sortHist !== null
+              ? `/${type}/${itemId}?pageHist=${pageHist}&sortHist=${sortHist}`
+              : `/${type}/${itemId}`
+          }
+          cb={cb}
+        >
           <div className="top">
             {image && <Image src={image} alt="item-thumb" />}
           </div>
