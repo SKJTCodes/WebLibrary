@@ -76,7 +76,9 @@ const SearchPage = () => {
                 tag.Text,
                 location.search
               );
-              navigate(url);
+              const url2 = helper.appendSearchString("page", 1, url);
+              setIsTag(true)
+              navigate(url2);
             }}
           />
         ))}
