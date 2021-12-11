@@ -5,6 +5,7 @@ X Comic If chapter is decimal number, cannot move to next chapter - done
 X search page, add tag list for search - done
 X When genre is empty table, unable to search because when inner join is blank, maybe can try left join - done
 
+- add static log path for python code
 - updateComic, if have '.' as folder name, when doing title, author split. will cause issues due to stem method
 - something wrong with updateComic, diff comic in same ID
 - when deleting item go back to previous link not back to main page

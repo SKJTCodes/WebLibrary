@@ -44,7 +44,7 @@ class ProcessInputs:
         data = []
         total_comics = [x for x in path.iterdir()]
         for comic in tqdm(total_comics, total=len(total_comics), desc="Obtaining Info"):
-            self.log.debug(f"Processing {comic.name}")
+            self.log.info(f"Processing {comic.name}")
             if comic.name == '0. Author+Title' or comic.is_file():
                 continue
 
