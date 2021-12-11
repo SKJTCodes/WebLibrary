@@ -44,7 +44,6 @@ class ProcessInputs:
         data = []
         total_comics = [x for x in path.iterdir()]
         for comic in tqdm(total_comics, total=len(total_comics), desc="Obtaining Info"):
-            self.log.info(f"Processing {comic.name}")
             if comic.name == '0. Author+Title' or comic.is_file():
                 continue
 
@@ -52,7 +51,7 @@ class ProcessInputs:
                 self.log.warning(f"Folder don't have +. {comic.stem}")
                 continue
 
-            author, title = str(comic.stem).split("+")
+            author, title = str(comic.name).split("+")
             cover_suffix = None
 
             chapter_paths = {}
