@@ -227,13 +227,11 @@ module.exports.search = async function (searchText, page, nPerPage = 20) {
     SELECT l.ItemId, l.Title, l.ItemType, l.CoverPath
     FROM Library_Items AS l
     LEFT JOIN Genres AS g
-    WHERE l.ItemId=g.ItemId
-    AND (
-      MATCH(l.Title,l.Maker,l.Description) 
-      AGAINST ('"${searchText}"' IN BOOLEAN MODE)
-      OR MATCH(g.Text)
-      AGAINST ('"${searchText}"' IN BOOLEAN MODE)
-    )
+    ON l.ItemId=g.ItemId
+    WHERE MATCH(l.Title,l.Maker,l.Description) 
+    AGAINST ('"${searchText}"' IN BOOLEAN MODE)
+    OR MATCH(g.Text)
+    AGAINST ('"${searchText}"' IN BOOLEAN MODE)
     GROUP BY l.ItemId
     ORDER BY l.ItemId DESC `;
 
