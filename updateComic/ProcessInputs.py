@@ -44,10 +44,10 @@ class ProcessInputs:
         data = []
         total_comics = [x for x in path.iterdir()]
         for comic in tqdm(total_comics, total=len(total_comics), desc="Obtaining Info"):
-            if comic.name == '0. Author+Title':
+            if comic.name == '0. Author+Title' or comic.is_file():
                 continue
 
-            if "+" not in str(comic.stem):
+            if "+" not in str(comic.name):
                 self.log.warning(f"Folder don't have +. {comic.stem}")
                 continue
 
