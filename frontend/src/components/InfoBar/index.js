@@ -22,18 +22,27 @@ const InfoBar = ({ item, type }) => {
           <Cover image_path={item.CoverPath} />
           <Text>
             <h1>{Helper.titleCase(item.Title)}</h1>
-            <h3>DESCRIPTION</h3>
-            <p>{item.Description}</p>
-            <h3>{type === "episode" ? "CREATOR" : "AUTHOR"}</h3>
-            <Link to={`/s?searchText=${item.Maker}`}>
-              <span className="author">{Helper.titleCase(item.Maker)}</span>
-            </Link>
-            <h3>TAG</h3>
-            {item.Genre.map((genre) => (
-              <Link key={genre} to={`/s?searchText=${genre}`}>
-                <Pill>{`${genre}`}</Pill>
+
+            <div style={{ marginBottom: "10px" }}>
+              <h3>DESCRIPTION</h3>
+              <div>{item.Description}</div>
+            </div>
+
+            <div style={{ marginBottom: "10px" }}>
+              <h3>{type === "episode" ? "CREATOR" : "AUTHOR"}</h3>
+              <Link to={`/s?searchText=${item.Maker}`}>
+                <span className="author">{Helper.titleCase(item.Maker)}</span>
               </Link>
-            ))}
+            </div>
+
+            <div style={{ marginBottom: "10px" }}>
+              <h3>TAG</h3>
+              {item.Genre.map((genre) => (
+                <Link key={genre} to={`/s?searchText=${genre}`}>
+                  <Pill>{`${genre}`}</Pill>
+                </Link>
+              ))}
+            </div>
           </Text>
         </Content>
       </div>

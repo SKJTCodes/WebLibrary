@@ -19,10 +19,12 @@ const SearchPage = () => {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
+
   const [type, setType] = useState(TYPES[0]);
+  const [isTag, setIsTag] = useState(true);
 
   const { state, loading, error, text, pageNum, setText, setPageNum } =
-    useSearch(params.getAll("searchText"));
+    useSearch(params.getAll("searchText")[0]);
   const { state: tags, loading: loading2, error: error2 } = useTags();
 
   useEffect(() => {
@@ -33,8 +35,11 @@ const SearchPage = () => {
     }
 
     if (params.getAll("page")[0]) setPageNum(params.getAll("page")[0]);
-    if (params.getAll("searchText")[0] & text === "") setText(params.getAll("searchText")[0]);
-  }, [state, params, setText, setPageNum]);
+
+    if (isTag) {
+      setText(params.getAll("searchText")[0]);
+    }
+  }, [state, params, isTag, setText, setPageNum]);
 
   if (error | error2) return <div>Something went wrong ....</div>;
 
@@ -50,7 +55,14 @@ const SearchPage = () => {
 
   return (
     <>
-      <SearchBar searchText={text} setSearchText={setText} />
+      <SearchBar
+        searchText={text}
+        setSearchText={(e) => {
+          setIsTag(false);
+          setText(e);
+        }}
+      />
+
       {/* Display Tags */}
       <div className="container" style={{ paddingTop: "20px" }}>
         {tags.map((tag) => (

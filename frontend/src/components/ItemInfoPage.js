@@ -106,7 +106,6 @@ const ItemInfoPage = () => {
         <InfoBar item={state["identity"]} type={tableType} />
 
         <div style={{ margin: "20px" }}></div>
-        {console.log(pageHist, sortHist)}
         <Grid header={`${Helper.titleCase(tableType)}s`}>
           {state[`${tableType}s`].map((item) => (
             <Thumb
