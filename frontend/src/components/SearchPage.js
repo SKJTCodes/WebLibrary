@@ -33,7 +33,7 @@ const SearchPage = () => {
     }
 
     if (params.getAll("page")[0]) setPageNum(params.getAll("page")[0]);
-    if (params.getAll("searchText")[0]) setText(params.getAll("searchText")[0]);
+    if (params.getAll("searchText")[0] & text === "") setText(params.getAll("searchText")[0]);
   }, [state, params, setText, setPageNum]);
 
   if (error | error2) return <div>Something went wrong ....</div>;
