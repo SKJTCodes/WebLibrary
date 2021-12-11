@@ -14,6 +14,7 @@ router.get("/search", function (req, res) {
 
   search(text, page, num)
     .then((data) => {
+      console.log(data)
       res.json({...data, page: page});
     })
     .catch((err) => {
@@ -76,7 +77,6 @@ router.delete("/entry", (req, res) => {
   const { itemId, itemType } = req.query;
   deleteEntry(itemId, itemType)
     .then((data) => {
-      console.log(data);
       res.send(data);
     })
     .catch((err) => {

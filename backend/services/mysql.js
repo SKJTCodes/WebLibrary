@@ -221,7 +221,6 @@ module.exports.getCurAdjChptPages = async function (itemId, chptNum) {
 // Search Table
 module.exports.search = async function (searchText, page, nPerPage = 20) {
   try {
-    console.log(page)
     const offset = nPerPage * (page - 1);
 
     const query = `

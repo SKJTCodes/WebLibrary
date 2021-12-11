@@ -4,6 +4,7 @@ X Delete Library Item - done
 X Comic If chapter is decimal number, cannot move to next chapter - done
 X search page, add tag list for search - done
 - updateComic, if have '.' as folder name, when doing title, author split. will cause issues due to stem method
+- When genre is empty table, unable to search because when inner join is blank, maybe can try left join
 - something wrong with updateComic, diff comic in same ID
 - when deleting item go back to previous link not back to main page
 - pagination to Search Page
