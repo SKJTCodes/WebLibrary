@@ -226,7 +226,7 @@ module.exports.search = async function (searchText, page, nPerPage = 20) {
     const query = `
     SELECT l.ItemId, l.Title, l.ItemType, l.CoverPath
     FROM Library_Items AS l
-    INNER JOIN Genres AS g
+    LEFT JOIN Genres AS g
     WHERE l.ItemId=g.ItemId
     AND (
       MATCH(l.Title,l.Maker,l.Description) 
