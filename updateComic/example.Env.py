@@ -1,0 +1,5 @@
+class Env:
+    HOST = "mySQL IP_ADDRESS/PC_HOSTNAME"
+    USER = "mySQL USERNAME"
+    PWD = "mySQL PASSWORD"
+    DB = "mySQL DATABASE_NAME"
