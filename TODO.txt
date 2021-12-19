@@ -7,6 +7,7 @@ X When genre is empty table, unable to search because when inner join is blank, 
 X updateComic, if have '.' as folder name, when doing title, author split. will cause issues due to stem method - done
 X pagination to Search Page - done
 
+- add user login to access different content
 - Chapter can be string, not only number
 - add static log path for python code
 - something wrong with updateComic, diff comic in same ID

@@ -118,9 +118,13 @@ const ItemInfoPage = () => {
               itemId={`${item.ItemId}/${
                 item[`${Helper.titleCase(tableType)}No`]
               }`}
-              title={`${Helper.titleCase(tableType)} ${
-                item[`${Helper.titleCase(tableType)}No`]
-              }`}
+              title={
+                item[`${Helper.titleCase(tableType)}Title`] === null
+                  ? `${Helper.titleCase(tableType)} ${
+                      item[`${Helper.titleCase(tableType)}No`]
+                    }`
+                  : item[`${Helper.titleCase(tableType)}Title`]
+              }
               pageHist={pageHist}
               sortHist={sortHist}
               type={itemType}

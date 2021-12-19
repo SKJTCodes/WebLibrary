@@ -29,6 +29,7 @@ FULLTEXT (Text)
 # Episode/Chapters of Library Items, One Library Item to Multiple episode/chapter
 CREATE TABLE Chapters(
 ChptId INT NOT NULL,
+ChapterTitle VARCHAR(255)
 ChapterNo DOUBLE NOT NULL,
 TotalPages INT NOT NULL,
 DateCreated DaTETIME NOT NULL,
@@ -38,6 +39,7 @@ FOREIGN KEY (ItemId) REFERENCES Library_Items(ItemId)
 );
 CREATE TABLE Episodes(
 EpId INT NOT NULL,
+EpisodeTitle VARCHAR(255),
 EpisodeNo DOUBLE NOT NULL,
 Path VARCHAR(255) NOT NULL,
 DateCreated DATETIME NOT NULL,
