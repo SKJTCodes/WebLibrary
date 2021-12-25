@@ -119,7 +119,7 @@ const ItemInfoPage = () => {
                 item[`${Helper.titleCase(tableType)}No`]
               }`}
               title={
-                item[`${Helper.titleCase(tableType)}Title`] === null
+                item[`${Helper.titleCase(tableType)}Title`] === ""
                   ? `${Helper.titleCase(tableType)} ${
                       item[`${Helper.titleCase(tableType)}No`]
                     }`
@@ -129,7 +129,6 @@ const ItemInfoPage = () => {
               sortHist={sortHist}
               type={itemType}
               clickable
-              disable
             />
           ))}
         </Grid>

@@ -1,8 +1,7 @@
-''# Create database according to backend/.env file
+# Create database according to backend/.env file
 CREATE DATABASE web_lib;
 use web_lib
 
-# Create Common Video/Image Tables
 CREATE TABLE Library_Items(
 ItemId INT NOT NULL,
 Title VARCHAR(255) NOT NULL,
@@ -16,7 +15,6 @@ PRIMARY KEY (ItemId),
 FULLTEXT (Title, Maker, Description)
 );
 
-# Table to list genres of Library Items, One Library Item to multiple Genres
 CREATE TABLE Genres(
 GenreId INT NOT NULL,
 Text VARCHAR(255) NOT NULL,
@@ -26,17 +24,17 @@ FOREIGN KEY (ItemId) REFERENCES Library_Items(ItemId),
 FULLTEXT (Text)
 );
 
-# Episode/Chapters of Library Items, One Library Item to Multiple episode/chapter
 CREATE TABLE Chapters(
 ChptId INT NOT NULL,
-ChapterTitle VARCHAR(255)
+ChapterTitle VARCHAR(255),
 ChapterNo DOUBLE NOT NULL,
 TotalPages INT NOT NULL,
-DateCreated DaTETIME NOT NULL,
+DateCreated DATETIME NOT NULL,
 ItemId INT,
 PRIMARY KEY (ChptId),
 FOREIGN KEY (ItemId) REFERENCES Library_Items(ItemId)
 );
+
 CREATE TABLE Episodes(
 EpId INT NOT NULL,
 EpisodeTitle VARCHAR(255),
@@ -48,7 +46,6 @@ PRIMARY KEY (EpId),
 FOREIGN KEY (ItemId) REFERENCES Library_Items(ItemId)
 );
 
-# List of Page Paths for each Chapter, a single Chapter has Multiple Pages
 CREATE TABLE Pages(
 PageId INT NOT NULL,
 Path VARCHAR(255) NOT NULL,
